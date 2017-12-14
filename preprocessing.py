@@ -1,4 +1,4 @@
-import preprocess_text_class
+#import preprocess_text_class
 from shutil import copyfile
 import math
 from math import floor
@@ -27,7 +27,7 @@ import os
 import pickle
 from distutils.dir_util import copy_tree
 import yaml
-
+import logging
 # class config(object):
 #     def __init__(self):
 #         self.config={}
@@ -123,7 +123,7 @@ class BaseData():
                         if "dewey:::" in line:
                             dewey = line.split(":::")[1]
                             dewey = dewey.strip()
-                            print(dewey)
+                            #print(dewey)
                     f = open(os.path.join(rootdir, file[5:]), "r")
                     text = f.read()
 
@@ -339,7 +339,7 @@ class PreProcessRawText:
 
 
 
-class dataAugmention(object):
+class dataAugmention:
 
     def __init__(self):
         self.config = {}
@@ -356,3 +356,24 @@ class dataAugmention(object):
         self.noise_method = self.config["da_noise_method"]
         with open(self.config["PathToNoisePickle"], 'rb') as handle:
             self.MostSimilarPickle = pickle.load(handle)
+
+
+if __name__ == '__main__':
+    logging.basicConfig(filename='run.log', level=logging.INFO)
+    logging.info('Started')
+
+
+    train_test = BaseData()
+    train_test.load_config("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml")
+    print(train_test.config)
+
+    train_test.preprocess()
+    train_test.split_to_training_and_test()
+
+    #Add wikipedia data to corpus
+    train_test.preprocess_wiki()
+    train_test.add_wiki_to_training()
+
+    # Split articles|
+    train_test.split_articles()
+    logging.info('Finished')

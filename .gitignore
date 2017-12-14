@@ -6,3 +6,4 @@ resources/*
 *.tar.gz
 *venv
 __pycache__/*
+tgc/*

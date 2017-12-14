@@ -1,10 +1,10 @@
 # python
 {
-name_corpus : test_onsdag_cnn
+name_corpus : test_torsdag_mlp
 ,data_set_name : tgc
 ,data_set_folder : data_set
-,corpus_name_folder : test_onsdag_cnn
-,stemming : !!python/bool True
+,corpus_name_folder : test_torsdag_mlp
+,stemming : !!python/bool False
 ,sentences : !!python/bool False
 ,stop_words : !!python/bool True
 ,extra_functions : !!python/bool False

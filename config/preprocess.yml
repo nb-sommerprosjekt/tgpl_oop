@@ -1,0 +1,28 @@
+# python
+{
+name_corpus : test_onsdag_cnn
+,data_set_name : tgc
+,data_set_folder : data_set
+,corpus_name_folder : test_onsdag_cnn
+,stemming : !!python/bool True
+,sentences : !!python/bool False
+,stop_words : !!python/bool True
+,extra_functions : !!python/bool False
+,lower_case : !!python/bool True
+,test_ratio : 0.20
+,deweyLength: 3
+,wikipedia : False
+,wiki_data_set_name : !!python/str tgc_wiki
+,wiki_name_corpus: test_mandag_cnn_wiki
+,article_length: 500
+
+,artificial_folder : artificial
+
+
+# data_augmentation
+,da_run : !!python/bool False
+,da_splits : !!python/int 0
+,da_noise_percentage : !!python/int 10
+,da_noise_method : !!python/str noise_on_parts
+,PathToNoisePickle : !!python/str resources/most_similar_dict.pickle
+}

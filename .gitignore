@@ -7,3 +7,4 @@ resources/*
 *venv
 __pycache__/*
 tgc/*
+testing/*

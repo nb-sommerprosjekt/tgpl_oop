@@ -11,35 +11,19 @@ import os
 import datetime
 import pickle
 import re
-import evaluator2
+#import evaluator2
 from sklearn.metrics import accuracy_score
 import utils
+import yaml
 
 class mlp(object):
-    vocab = []
-    VOCAB_SIZE = 0
-    TRAINING_SET_path = None
-    x_train = []
-    y_train = []
-    x_test = []
-    y_test = []
 
-    #MAX_SEQUENCE_LENGTH = 0
-    #BATCH_SIZE,
-    #VOCAB_SIZE,
-    #MAX_SEQUENCE_LENGTH, \
-    #EPOCHS, \
-    #FOLDER_TO_SAVE_MODEL, \
-    #LOSS_MODEL,
-    #VECTORIZATION_TYPE,
-    #VALIDATION_SPLIT)
 
-    def __init__(self, training_set_path=None, vocab_size=5000, max_sequence_length=1000):
+    def __init__(self, pathToConfig):
         #vocab = []
         #vocab_size = 0
-        self.TRAINING_SET_path=training_set_path
-        self.VOCAB_SIZE = vocab_size
-        self.MAX_SEQUENCE_LENGTH = max_sequence_length
+        self.config = {}
+        self.load_config(pathToConfig)
         self.x_train = []
         self.y_train = []
         self.x_test = []
@@ -52,75 +36,80 @@ class mlp(object):
         #VALIDATION_SPLIT)
    # def fit(self):
     #def fastTextTrain2text(self):
+    def load_config(self, pathToConfigFile):
 
-    def train_mlp(self ,TRAINING_SET, BATCH_SIZE, VOCAB_SIZE, MAX_SEQUENCE_LENGTH, EPOCHS, FOLDER_TO_SAVE_MODEL, LOSS_MODEL,
-                  VECTORIZATION_TYPE, VALIDATION_SPLIT):
+
+        #self.load_config(pathToConfigFile)
+        with open(pathToConfigFile,"r") as file:
+             self.config = yaml.load(file)
+
+        self.trainingSetPath=self.config["trainingSetPath"]
+        self.vocabSize = self.config["vocabSize"]
+        self.maxSequenceLength = self.config["maxSequenceLength"]
+
+        self.batchSize = self.config["batchSize"]
+        self.vectorizationType = self.config["vectorizationType"]
+        self.epochs = self.config["epochs"]
+        self.validationSplit = self.config["validationSplit"]
+        self.folderToSaveModels = self.config["folderToSaveModels"]
+        self.modelDir = None
+        self.lossModel = self.config["lossModel"]
+
+    def fit(self):
         '''Training model'''
-
-        start_time = time.time()
-
-        ## Preprocessing
-        vocab_size = VOCAB_SIZE
-        VALIDATION_SPLIT = float(VALIDATION_SPLIT)
-        EPOCHS = int(EPOCHS)
-        BATCH_SIZE = int(BATCH_SIZE)
-        VOCAB_SIZE = int(VOCAB_SIZE)
-
-        x_train, y_train, tokenizer, num_classes, labels_index = self.fasttextTrain2mlp(TRAINING_SET, MAX_SEQUENCE_LENGTH,
-                                                                                   vocab_size
-                                                                                   , VECTORIZATION_TYPE, folder=False)
-
-        ####Preparing test_set
-
+        start_time= time.time()
+        self.x_train, self.y_train, tokenizer, num_classes, labels_index = self.fasttextTrain2mlp(self.trainingSetPath, self.maxSequenceLength,
+                                                                                   self.vocabSize
+                                                                                   , self.vectorizationType, folder=True)
         model = Sequential()
-        model.add(Dense(512, input_shape=(MAX_SEQUENCE_LENGTH,)))
+        model.add(Dense(512, input_shape=(self.maxSequenceLength,)))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
-        model.add(Dense(512, input_shape=(vocab_size,)))
+        model.add(Dense(512, input_shape=(self.vocabSize,)))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
         model.add(Dense(num_classes))
         model.add(Activation('softmax'))
 
         model.summary()
-        model.compile(loss=LOSS_MODEL,
+        model.compile(loss=self.lossModel,
                       optimizer='adam',
                       metrics=['accuracy'])
 
-        model.fit(x_train, y_train,
-                  batch_size=BATCH_SIZE,
-                  epochs=EPOCHS,
+        model.fit(self.x_train, self.y_train,
+                  batch_size=self.batchSize,
+                  epochs=self.epochs,
                   verbose=1,
-                  validation_split=VALIDATION_SPLIT
+                  validation_split=self.validationSplit
                   )
 
         # Lagre modell
         model_time_stamp = '{:%Y%m%d%H%M}'.format(datetime.datetime.now())
-        model_directory = os.path.join(FOLDER_TO_SAVE_MODEL,
-                                       "mlp-" + str(vocab_size) + "-" + str(MAX_SEQUENCE_LENGTH) + "-" + str(
-                                           EPOCHS) + "-" + str(model_time_stamp))
-        if not os.path.exists(model_directory):
-            os.makedirs(model_directory)
+        self.model_directory = os.path.join(self.folderToSaveModels,
+                                       "mlp-" + str(self.vocabSize) + "-" + str(self.maxSequenceLength) + "-" + str(
+                                           self.epochs) + "-" + str(model_time_stamp))
+        if not os.path.exists(self.model_directory):
+            os.makedirs(self.model_directory)
 
-        save_model_path = os.path.join(model_directory, "model.bin")
+        save_model_path = os.path.join(self.model_directory, "model.bin")
         model.save(save_model_path)
 
         time_elapsed = time.time() - start_time
         # Skrive nøkkelparametere til tekstfil
-        utils.log_model_stats(model_directory, TRAINING_SET, x_train
-                              , num_classes, vocab_size, MAX_SEQUENCE_LENGTH
-                              , EPOCHS, time_elapsed, save_model_path,
-                              LOSS_MODEL, VECTORIZATION_TYPE, VALIDATION_SPLIT, word2vec=None)
+        utils.log_model_stats(self.model_directory, self.trainingSetPath, self.x_train
+                              , num_classes, self.vocabSize, self.maxSequenceLength
+                              , self.epochs, time_elapsed, save_model_path,
+                              self.lossModel, self.vectorizationType, self.validationSplit, word2vec=None)
 
         # Lagre tokenizer
-        with open(model_directory + '/tokenizer.pickle', 'wb') as handle:
+        with open(self.model_directory + '/tokenizer.pickle', 'wb') as handle:
             pickle.dump(tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
         # Lagre label_indexes
-        with open(model_directory + '/label_indexes.pickle', 'wb') as handle:
+        with open(self.model_directory + '/label_indexes.pickle', 'wb') as handle:
             pickle.dump(labels_index, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-        print("Modell ferdig trent og lagret i " + model_directory)
-        return model_directory
+        print("Modell ferdig trent og lagret i " + self.model_directory)
+
 
     def fasttextTrain2mlp(self, FASTTEXT_TRAIN_FILE, MAX_SEQUENCE_LENGTH, VOCAB_SIZE, VECTORIZATION_TYPE, folder):
         '''Converting training_set from fasttext format to MLP-format'''
@@ -157,64 +146,65 @@ class mlp(object):
 
         return x_train, y_train, tokenizer, num_classes, labels_index  # x_test, y_test, num_classes
 
-    def test_mlp(self, TEST_SET, MODEL_DIRECTORY, k_output_labels, isMajority_rule=True):
+    def predict(self, TEST_SET, k_output_labels, isMajority_rule=True):
         # TEST_SET = deweys_and_texts
         '''Test module for MLP'''
         # format of test_set [[dewey][text_split1, text_split2,text_split3]]
         # Loading model
-        model = load_model(os.path.join(MODEL_DIRECTORY, 'model.bin'))
+        model = load_model(os.path.join(self.model_directory, 'model.bin'))
 
         # loading tokenizer
-        with open(os.path.join(MODEL_DIRECTORY, "tokenizer.pickle"), 'rb') as handle:
+        with open(os.path.join(self.model_directory, "tokenizer.pickle"), 'rb') as handle:
             tokenizer = pickle.load(handle)
         # loading label indexes
-        with open(os.path.join(MODEL_DIRECTORY, "label_indexes.pickle"), 'rb') as handle:
+        with open(os.path.join(self.model_directory, "label_indexes.pickle"), 'rb') as handle:
             labels_index = pickle.load(handle)
 
         # Loading parameters like max_sequence_length, vocabulary_size and vectorization_type
-        with open(os.path.join(MODEL_DIRECTORY, "model_stats"), 'r') as params_file:
+        with open(os.path.join(self.model_directory, "model_stats"), 'r') as params_file:
             params_data = params_file.read()
 
         re_max_seq_length = re.search('length:(.+?)\n', params_data)
         if re_max_seq_length:
-            MAX_SEQUENCE_LENGTH = int(re_max_seq_length.group(1))
-            print("Max sequence length:{}".format(MAX_SEQUENCE_LENGTH))
+            self.maxSequenceLength = int(re_max_seq_length.group(1))
+            print("Max sequence length:{}".format(self.maxSequenceLength))
         re_vocab_size = re.search('size:(.+?)\n', params_data)
         if re_vocab_size:
-            vocab_size = int(re_vocab_size.group(1))
-            print("Vocabulary size: {}".format(vocab_size))
+            self.vocabSize = int(re_vocab_size.group(1))
+            print("Vocabulary size: {}".format(self.vocabSize))
 
         re_vectorization_type = re.search('type:(.+?)\n', params_data)
         if re_vectorization_type:
-            vectorization_type = re_vectorization_type.group(1)
-            print("This utilizes the vectorization: {}".format(str(vectorization_type)))
+            self.vectorizationType = re_vectorization_type.group(1)
+            print("This utilizes the vectorization: {}".format(str(self.vectorizationType)))
 
         if isMajority_rule == True:
             predictions, test_accuracy = self.mlp_majority_rule_test(test_set_dewey=TEST_SET, MODEL=model,
-                                                                MAX_SEQUENCE_LENGTH=MAX_SEQUENCE_LENGTH,
+                                                                MAX_SEQUENCE_LENGTH=self.maxSequenceLength,
                                                                 TRAIN_TOKENIZER=tokenizer,
                                                                 LABEL_INDEX_VECTOR=labels_index,
-                                                                VECTORIZATION_TYPE=vectorization_type,
+                                                                VECTORIZATION_TYPE=self.vectorizationType,
                                                                 k_output_labels=k_output_labels)
 
         else:
-            x_test, y_test = self.fasttextTest2mlp(TEST_SET, MAX_SEQUENCE_LENGTH, vocab_size, tokenizer, labels_index,
-                                              VECTORIZATION_TYPE=vectorization_type)
+            x_test, y_test = self.fasttextTest2mlp(TEST_SET, self.maxSequenceLength, tokenizer, labels_index,
+                                              self.vectorizationType)
             # test_score,test_accuracy = evaluation(model,x_test,y_test, VERBOSE = 1)
             predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
 
-            # print('Test_score:', test_score)
-            # print('Test Accuracy', test_accuracy)
+            #print('Test_score:', test_score)
+            #print('Test Accuracy', test_accuracy)
         # Writing results to txt-file.
-        with open(os.path.join(MODEL_DIRECTORY, "result.txt"), 'a') as result_file:
-            result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')
-        return predictions
+        #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
+        #    result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')
+        #return predictions
+        print(predictions)
 
 
     def fasttextTest2mlp(self ,FASTTEXT_TEST_FILE, MAX_SEQUENCE_LENGTH, TRAIN_TOKENIZER, LABEL_INDEX_VECTOR,
                          VECTORIZATION_TYPE):
         ''' Preparing test data for MLP training'''
-        dewey_test, text_test = utils.get_articles(FASTTEXT_TEST_FILE)
+        text_names, dewey_test, text_test = utils.get_articles_from_folder(FASTTEXT_TEST_FILE)
         test_labels = []
 
         for dewey in dewey_test:
@@ -228,7 +218,7 @@ class mlp(object):
 
         return x_test, y_test
 
-    def mlp_majority_rule_test(self, test_set_dewey, MODEL, MAX_SEQUENCE_LENGTH, VOCAB_SIZE, TRAIN_TOKENIZER,
+    def mlp_majority_rule_test(self, test_set_dewey, MODEL, MAX_SEQUENCE_LENGTH, TRAIN_TOKENIZER,
                                LABEL_INDEX_VECTOR
                                , VECTORIZATION_TYPE, k_output_labels):
         total_preds = []
@@ -313,6 +303,10 @@ class mlp(object):
                         print("Noe gikk feil med testen, prøver på nytt")
                         self.test_mlp(test_set, MOD_DIR, k_output_labels, isMajority_rule)
 if __name__ == '__main__':
-    model = mlp()
-
+    model = mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
+    model.fit()
+    model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test",
+                  3,False)
+    print(model.config)
+    #model.train_mlp()
     #model.train_mlp()

@@ -1,9 +1,9 @@
 # python
 {
-name_corpus : test_torsdag_mlp
+name_corpus : test_fredag_mlp_new10
 ,data_set_name : tgc
 ,data_set_folder : data_set
-,corpus_name_folder : test_torsdag_mlp
+,corpus_name_folder : test_fredag_mlp_new10
 ,stemming : !!python/bool False
 ,sentences : !!python/bool False
 ,stop_words : !!python/bool True
@@ -21,7 +21,7 @@ name_corpus : test_torsdag_mlp
 
 # data_augmentation
 ,da_run : !!python/bool False
-,da_splits : !!python/int 0
+,da_splits : !!python/int 10
 ,da_noise_percentage : !!python/int 10
 ,da_noise_method : !!python/str noise_on_parts
 ,PathToNoisePickle : !!python/str resources/most_similar_dict.pickle

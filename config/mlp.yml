@@ -8,5 +8,6 @@
     epochs : !!python/int 10 ,
     validationSplit : !!python/float 0.2,
     folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/mlp,
-    lossModel : !!python/str categorical_crossentropy
+    lossModel : !!python/str categorical_crossentropy,
+    minNumArticlesPerDewey : !!python/int 50
 }

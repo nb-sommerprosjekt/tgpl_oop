@@ -28,14 +28,13 @@ class mlp(object):
         self.y_train = []
         self.x_test = []
         self.y_test = []
+        self.predictions = []
         #MAX_SEQUENCE_LENGTH, \
         #EPOCHS, \
         #FOLDER_TO_SAVE_MODEL, \
         #LOSS_MODEL,
         #VECTORIZATION_TYPE,
         #VALIDATION_SPLIT)
-   # def fit(self):
-    #def fastTextTrain2text(self):
     def load_config(self, pathToConfigFile):
 
 
@@ -54,13 +53,14 @@ class mlp(object):
         self.folderToSaveModels = self.config["folderToSaveModels"]
         self.modelDir = None
         self.lossModel = self.config["lossModel"]
-
+        self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
     def fit(self):
         '''Training model'''
         start_time= time.time()
         self.x_train, self.y_train, tokenizer, num_classes, labels_index = self.fasttextTrain2mlp(self.trainingSetPath, self.maxSequenceLength,
-                                                                                   self.vocabSize
-                                                                                   , self.vectorizationType, folder=True)
+                                                                                   self.vocabSize, self.vectorizationType,
+                                                                                    minNumArticlesPerDewey = self.minNumArticlesPerDewey)
+
         model = Sequential()
         model.add(Dense(512, input_shape=(self.maxSequenceLength,)))
         model.add(Activation('relu'))
@@ -111,28 +111,29 @@ class mlp(object):
         print("Modell ferdig trent og lagret i " + self.model_directory)
 
 
-    def fasttextTrain2mlp(self, FASTTEXT_TRAIN_FILE, MAX_SEQUENCE_LENGTH, VOCAB_SIZE, VECTORIZATION_TYPE, folder):
+    def fasttextTrain2mlp(self, FASTTEXT_TRAIN_FILE, MAX_SEQUENCE_LENGTH, VOCAB_SIZE, VECTORIZATION_TYPE, minNumArticlesPerDewey):
         '''Converting training_set from fasttext format to MLP-format'''
-        if folder == False:
-            dewey_train, text_train = utils.get_articles(FASTTEXT_TRAIN_FILE)
-        else:
-            text_names, dewey_train, text_train = utils.get_articles_from_folder(FASTTEXT_TRAIN_FILE)
+        corpus_df = utils.get_articles_from_folder(FASTTEXT_TRAIN_FILE)
+
+        corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
+        y_train = corpus_df['dewey']
+        x_train = corpus_df['text']
 
         labels_index = {}
         labels = []
-        for dewey in set(dewey_train):
+        for dewey in set(y_train):
             label_id = len(labels_index)
             labels_index[dewey] = label_id
-        for dewey in dewey_train:
+        for dewey in y_train:
             labels.append(labels_index[dewey])
         print("length of labels indexes: {} ".format(len(labels_index)))
         # print(labels_index)
         print("Length of labels:{}".format(len(labels)))
-        num_classes = len(set(dewey_train))
+        num_classes = len(set(y_train))
         # Preparing_training_set
         tokenizer = Tokenizer(num_words=VOCAB_SIZE)
-        tokenizer.fit_on_texts(text_train)
-        sequences = tokenizer.texts_to_sequences(text_train)
+        tokenizer.fit_on_texts(x_train)
+        sequences = tokenizer.texts_to_sequences(x_train)
         sequence_matrix = tokenizer.sequences_to_matrix(sequences, mode=VECTORIZATION_TYPE)
 
         data = pad_sequences(sequence_matrix, maxlen=MAX_SEQUENCE_LENGTH)
@@ -189,31 +190,43 @@ class mlp(object):
         else:
             x_test, y_test = self.fasttextTest2mlp(TEST_SET, self.maxSequenceLength, tokenizer, labels_index,
                                               self.vectorizationType)
-            # test_score,test_accuracy = evaluation(model,x_test,y_test, VERBOSE = 1)
-            predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
+            test_score,test_accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
+            self.predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
 
-            #print('Test_score:', test_score)
-            #print('Test Accuracy', test_accuracy)
+            print('Test_score:', test_score)
+            print('Test Accuracy', test_accuracy)
         # Writing results to txt-file.
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
         #    result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')
         #return predictions
-        print(predictions)
 
 
-    def fasttextTest2mlp(self ,FASTTEXT_TEST_FILE, MAX_SEQUENCE_LENGTH, TRAIN_TOKENIZER, LABEL_INDEX_VECTOR,
-                         VECTORIZATION_TYPE):
+
+    def fasttextTest2mlp(self ,fasttext_test_file, max_sequence_length, train_tokenizer, label_index_vector,
+                         vectorization_type):
         ''' Preparing test data for MLP training'''
-        text_names, dewey_test, text_test = utils.get_articles_from_folder(FASTTEXT_TEST_FILE)
+        test_corpus_df = utils.get_articles_from_folder(fasttext_test_file)
+        self.x_test = test_corpus_df['text']
+        self.y_test = test_corpus_df['dewey']
+        validDeweys = utils.findValidDeweysFromTrain(self.y_test, label_index_vector)
+        print(len(set(validDeweys)))
+        print(validDeweys)
+        #test_corpus_df = test_corpus_df[test_corpus_df['dewey'].isin(validDeweys)]
+        test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
+        print(test_corpus_df.describe())
+
+        self.y_test = test_corpus_df['dewey']
+        self.x_test = test_corpus_df['text']
+
+
         test_labels = []
+        for dewey in self.y_test:
+            test_labels.append(label_index_vector[dewey.strip()])
 
-        for dewey in dewey_test:
-            test_labels.append(LABEL_INDEX_VECTOR[dewey.strip()])
+        test_sequences = train_tokenizer.texts_to_sequences(self.x_test)
+        test_sequence_matrix = train_tokenizer.sequences_to_matrix(test_sequences, mode=vectorization_type)
 
-        test_sequences = TRAIN_TOKENIZER.texts_to_sequences(text_test)
-        test_sequence_matrix = TRAIN_TOKENIZER.sequences_to_matrix(test_sequences, mode=VECTORIZATION_TYPE)
-
-        x_test = pad_sequences(test_sequence_matrix, maxlen=MAX_SEQUENCE_LENGTH)
+        x_test = pad_sequences(test_sequence_matrix, maxlen=max_sequence_length)
         y_test = to_categorical(np.asarray(test_labels))
 
         return x_test, y_test
@@ -307,6 +320,7 @@ if __name__ == '__main__':
     model.fit()
     model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test",
                   3,False)
+
     print(model.config)
     #model.train_mlp()
     #model.train_mlp()

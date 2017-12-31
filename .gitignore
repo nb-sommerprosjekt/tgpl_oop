@@ -8,3 +8,4 @@ resources/*
 __pycache__/*
 tgc/*
 testing/*
+w2v_tgc/*

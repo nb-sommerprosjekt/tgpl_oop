@@ -1,6 +1,7 @@
 import os
 import datetime
 import numpy as np
+import pandas as pd
 def get_articles(original_name):
     # Tar inn en textfil som er labelet på fasttext-format. Gir ut to arrays. Et med deweys og et med tekstene. [deweys],[texts]
     articles=open(original_name,"r")
@@ -36,7 +37,14 @@ def get_articles_from_folder(folder):
     text_names = [path.replace('.txt','') for path in arr_txt ]
     #print(len(dewey_array))
     #print(text_names)
-    return text_names, dewey_array, docs
+
+    corpus_df= pd.DataFrame(
+        {'file_name': text_names,
+         'text': docs,
+         'dewey': dewey_array
+         })
+
+    return corpus_df
 
 def log_model_stats(model_directory, training_set_name, training_set,
                  num_classes,vocab_size, max_sequence_length,
@@ -88,3 +96,11 @@ def prediction(MODEL,X_TEST,k_preds, label_indexes):
     #print(all_topk_labels)
 
     return all_topk_labels
+
+def findValidDeweysFromTrain(listOfDeweys, labelIndexDictFromTrain):
+    valid_deweys = []
+    # Finding valid deweys based on training set
+    for dewey in listOfDeweys:
+        if dewey in labelIndexDictFromTrain:
+            valid_deweys.append(dewey)
+    return valid_deweys

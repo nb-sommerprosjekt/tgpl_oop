@@ -48,6 +48,7 @@ class cnn():
         self.lossModel = self.config["lossModel"]
         self.w2vPath = self.config["w2vPath"]
         self.embeddingDim = self.config["embeddingDimensions"]
+        self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
 
     def fit(self): #EPOCHS, FOLDER_TO_SAVE_MODEL, loss_model,
                   #VALIDATION_SPLIT, word2vec_file_name):
@@ -57,7 +58,7 @@ class cnn():
 
         self.x_train, self.y_train, word_index, labels_index, tokenizer, num_classes = self.fasttextTrain2CNN(training_set=self.trainingSetPath,
                                                                                                max_sequence_length=self.maxSequenceLength,
-                                                                                               vocab_size= self.vocabSize)
+                                                                                               vocab_size= self.vocabSize, minNumArticlesPerDewey= self.minNumArticlesPerDewey)
         self.embedding_matrix = self.create_embedding_matrix(self.w2vPath, word_index, self.embeddingDim)
         print(self.embedding_matrix.shape)
         #
@@ -135,22 +136,26 @@ class cnn():
 
 
 
-    def fasttextTrain2CNN(self, training_set, max_sequence_length, vocab_size):
+    def fasttextTrain2CNN(self, training_set, max_sequence_length, vocab_size, minNumArticlesPerDewey):
         '''Transforming training set from fasttext format to CNN format.'''
-        text_names, dewey_train, text_train = utils.get_articles_from_folder(training_set)
+        corpus_df = utils.get_articles_from_folder(training_set)
+        ###Filtering articles by frequency of articles per dewey
+        corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
+        self.y_train = corpus_df['dewey']
+        self.x_train = corpus_df['text']
         labels_index = {}
         labels = []
-        for dewey in set(dewey_train):
+        for dewey in set(self.y_train):
             label_id = len(labels_index)
             labels_index[dewey] = label_id
-        for dewey in dewey_train:
+        for dewey in self.y_train:
             labels.append(labels_index[dewey])
 
-        num_classes = len(set(dewey_train))
+        num_classes = len(set(corpus_df['dewey']))
 
         tokenizer = Tokenizer(num_words= vocab_size)
-        tokenizer.fit_on_texts(text_train)
-        sequences = tokenizer.texts_to_sequences(text_train)
+        tokenizer.fit_on_texts(self.x_train)
+        sequences = tokenizer.texts_to_sequences(self.x_train)
 
         #print(sequences)
         word_index = tokenizer.word_index
@@ -199,8 +204,9 @@ class cnn():
 
     def predict(self, test_set, k_top_labels):
         '''Test module for CNN'''
-        text_names, self.y_test, self.x_test = utils.get_articles_from_folder(test_set)
+        test_corpus_df = utils.get_articles_from_folder(test_set)
         #Loading model
+
 
         model = load_model(self.modelDir+'/model.bin')
 
@@ -231,9 +237,31 @@ class cnn():
         #                                                         k_output_labels=k_top_labels)
 
 
+        # test_labels = []
+        # valid_deweys = set()
+        # # Finding valid deweys based on training set
+        # for dewey in self.y_test:
+        #      ##If statement to ensure that you have the same deweys in
+        #      if labels_index[dewey]:
+        #         #test_labels.append(labels_index[dewey])
+        #         valid_deweys.update(dewey)
+        self.y_test = test_corpus_df['dewey']
+        self.x_test = test_corpus_df['text']
+
+        validDeweys = utils.findValidDeweysFromTrain(self.y_test, labels_index)
+        print(len(set(validDeweys)))
+        print(validDeweys)
+        #test_corpus_df = test_corpus_df[test_corpus_df['dewey'].isin(validDeweys)]
+        test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
+        print(test_corpus_df.describe())
+
+        self.y_test = test_corpus_df['dewey']
+        self.x_test = test_corpus_df['text']
+
         test_labels = []
         for dewey in self.y_test:
-             test_labels.append(labels_index[dewey])
+                test_labels.append(labels_index[dewey])
+
         test_sequences = tokenizer.texts_to_sequences(self.x_test)
         test_word_index = tokenizer.word_index
         self.x_test = pad_sequences(test_sequences, maxlen=self.maxSequenceLength)

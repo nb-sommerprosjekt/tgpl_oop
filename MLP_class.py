@@ -76,13 +76,13 @@ class mlp(object):
                       optimizer='adam',
                       metrics=['accuracy'])
 
-        model.fit(self.x_train, self.y_train,
+        model_history = model.fit(self.x_train, self.y_train,
                   batch_size=self.batchSize,
                   epochs=self.epochs,
                   verbose=1,
                   validation_split=self.validationSplit
                   )
-
+        utils.plotTrainHistory(model_history)
         # Lagre modell
         model_time_stamp = '{:%Y%m%d%H%M}'.format(datetime.datetime.now())
         self.model_directory = os.path.join(self.folderToSaveModels,

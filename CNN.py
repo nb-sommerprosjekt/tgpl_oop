@@ -92,7 +92,7 @@ class cnn():
                   validation_split= self.validationSplit
                    )
         # list all data in history
-        self.plotTrainHistory(cnn_model)
+        utils.plotTrainHistory(cnn_model)
         #print(history.history.keys())
         # summarize history for accuracy
 
@@ -185,22 +185,6 @@ class cnn():
                 continue
         return embedding_matrix
 
-    def plotTrainHistory(self, model):
-        plt.plot(model.history['acc'])
-        plt.plot(model.history['val_acc'])
-        plt.title('model accuracy')
-        plt.ylabel('accuracy')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.show()
-        # summarize history for loss
-        plt.plot(model.history['loss'])
-        plt.plot(model.history['val_loss'])
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.show()
 
     def predict(self, test_set, k_top_labels):
         '''Test module for CNN'''

@@ -2,6 +2,7 @@ import os
 import datetime
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 def get_articles(original_name):
     # Tar inn en textfil som er labelet på fasttext-format. Gir ut to arrays. Et med deweys og et med tekstene. [deweys],[texts]
     articles=open(original_name,"r")
@@ -104,3 +105,20 @@ def findValidDeweysFromTrain(listOfDeweys, labelIndexDictFromTrain):
         if dewey in labelIndexDictFromTrain:
             valid_deweys.append(dewey)
     return valid_deweys
+
+def plotTrainHistory(model):
+        plt.plot(model.history['acc'])
+        plt.plot(model.history['val_acc'])
+        plt.title('model accuracy')
+        plt.ylabel('accuracy')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()
+        # summarize history for loss
+        plt.plot(model.history['loss'])
+        plt.plot(model.history['val_loss'])
+        plt.title('model loss')
+        plt.ylabel('loss')
+        plt.xlabel('epoch')
+        plt.legend(['train', 'test'], loc='upper left')
+        plt.show()

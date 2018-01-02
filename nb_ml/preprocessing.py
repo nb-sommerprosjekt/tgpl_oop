@@ -39,7 +39,7 @@ import sys
 #         with open(pathToConfigFile,"r") as file:
 #             self.config = yaml.load(file)
 
-class BaseData():
+class Corpus():
     #config = {}
 
     def __init__(self):
@@ -60,9 +60,9 @@ class BaseData():
         #self.load_config(pathToConfigFile)
         with open(pathToConfigFile,"r") as file:
              self.config = yaml.load(file)
-        self.name_corpus = self.config["name_corpus"]
-        self.data_set_name = self.config["data_set_name"]
-        self.data_set_folder = self.config["data_set_folder"]
+        self.name_corpus = self.config["nameOfCorpus"]
+        self.data_set_name = self.config["sourceDataSet"]
+        self.data_set_folder = self.config["corpusSaveDestination"]
         self.corpus_name_folder = os.path.join(self.data_set_folder, self.name_corpus)
         self.deweyDigitLength = self.config["deweyLength"]
         self.wiki_data_set_name = self.config["wiki_data_set_name"]

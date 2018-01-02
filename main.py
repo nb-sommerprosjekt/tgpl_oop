@@ -4,7 +4,7 @@ from nb_ml import CNN, MLP, preprocessing
 
 
 # ## Making preprocessing object
-# train_test = preprocessing.BaseData()
+# train_test = preprocessing.Corpus()
 # train_test.load_config("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml")
 #
 #

@@ -1,8 +1,8 @@
 # python
 {
-name_corpus : test_fredag_mlp_new10
-,data_set_name : tgc
-,data_set_folder : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set
+ nameOfCorpus : test_fredag_mlp_new10
+,sourceDataSet : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/tgc
+,corpusSaveDestination : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set
 ,corpus_name_folder : test_fredag_mlp_new10
 ,stemming : !!python/bool False
 ,sentences : !!python/bool False

@@ -190,9 +190,11 @@ class BaseData():
     def split_to_training_and_test(self):
         print("Splitting to training and test:")
         training_folder= os.path.join(str(self.corpus_name_folder),str(self.name_corpus)+"_training")
+        print(training_folder)
         test_folder= os.path.join(self.corpus_name_folder,self.name_corpus+"_test")
+        print(test_folder)
         corpus_name_location=os.path.join(self.corpus_name_folder ,self.name_corpus)
-
+        print(corpus_name_location)
         dewey_dict={}
 
         for subdir, dirs, files in os.walk(corpus_name_location):
@@ -224,7 +226,7 @@ class BaseData():
                 training_list.extend(temp_list)
 
 
-        if  os.path.exists(training_folder):
+        if  os.path.isdir(training_folder) == True:
             print("The test-folder already exists. No action will be taken. ")
             print("Training set is  {} articles.".format(len(training_list)))
         else:
@@ -233,7 +235,7 @@ class BaseData():
             for file in training_list:
                 copyfile(os.path.join(corpus_name_location, file), os.path.join(training_folder, file))
 
-        if  os.path.exists(test_folder):
+        if  os.path.isdir(test_folder) == True:
             print("The test-folder already exists. No action will be taken. ")
             print("Test set is  {} articles.".format(len(test_list)))
 

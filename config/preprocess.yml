@@ -2,7 +2,7 @@
 {
 name_corpus : test_fredag_mlp_new10
 ,data_set_name : tgc
-,data_set_folder : data_set
+,data_set_folder : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/data_set
 ,corpus_name_folder : test_fredag_mlp_new10
 ,stemming : !!python/bool False
 ,sentences : !!python/bool False
@@ -24,5 +24,5 @@ name_corpus : test_fredag_mlp_new10
 ,da_splits : !!python/int 10
 ,da_noise_percentage : !!python/int 10
 ,da_noise_method : !!python/str noise_on_parts
-,PathToNoisePickle : !!python/str resources/most_similar_dict.pickle
+,PathToNoisePickle : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/resources/most_similar_dict.pickle
 }

@@ -5,11 +5,11 @@
     maxSequenceLength : !!python/int 5000,
     batchSize : !!python/int 64,
     vectorizationType : !!python/str binary,
-    epochs : !!python/int 20 ,
+    epochs : !!python/int 1 ,
     validationSplit : !!python/float 0.2,
     folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/cnn,
     lossModel : !!python/str categorical_crossentropy,
-    w2vPath : !!python/str w2v_tgc/full.bin,
+    w2vPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/w2v_tgc/full.bin,
     embeddingDimensions : !!python/int 100,
     minNumArticlesPerDewey: !!python/int 50
 }

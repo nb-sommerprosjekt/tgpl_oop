@@ -5,7 +5,7 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 from keras.layers import Dense, Dropout, Activation
 import numpy as np
-from keras.models import Model, Sequential, load_model
+from keras.models import Sequential, load_model
 import time
 import os
 import datetime
@@ -315,12 +315,12 @@ class mlp(object):
 
                         print("Noe gikk feil med testen, prøver på nytt")
                         self.test_mlp(test_set, MOD_DIR, k_output_labels, isMajority_rule)
-if __name__ == '__main__':
-    model = mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
-    model.fit()
-    model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test",
-                  3,False)
-
-    print(model.config)
-    #model.train_mlp()
-    #model.train_mlp()
+# if __name__ == '__main__':
+#     model = mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
+#     model.fit()
+#     model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test",
+#                   3,False)
+#
+#     print(model.config)
+#     #model.train_mlp()
+#     #model.train_mlp()

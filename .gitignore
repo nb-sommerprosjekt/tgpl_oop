@@ -9,3 +9,5 @@ __pycache__/*
 tgc/*
 testing/*
 w2v_tgc/*
+nb_ml/__pycache__/*
+

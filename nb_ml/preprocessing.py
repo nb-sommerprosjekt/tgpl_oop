@@ -615,36 +615,35 @@ class dataAugmention:
 
 
 
-
-if __name__ == '__main__':
-    logging.basicConfig(filename='run.log', level=logging.INFO)
-    logging.info('Started')
-
-
-    train_test = BaseData()
-    train_test.load_config("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml")
-    #print(train_test.config)
-
-    train_test.preprocess()
-    train_test.split_to_training_and_test()
-
-    #Add wikipedia data to corpus
-    train_test.preprocess_wiki()
-    train_test.add_wiki_to_training()
-
-    # Split articles|
-    train_test.split_articles()
-
-
-    #
-    test = dataAugmention()
-    test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_torsdag_mlp/test_torsdag_mlp_training_split" )
-    test.get_articles()
-    test.create_fake_corpus()
-    test.copyArtificialFolderIntoCorpus()
-    print(test.output_folder)
-    #test.get_articles()
-    #print(len(test.text_array))
-    #print(len(test.text_names))
-    #print(len(test.dewey_array))
-    logging.info('Finished')
+#
+# if __name__ == '__main__':
+#     logging.basicConfig(filename='run.log', level=logging.INFO)
+#     logging.info('Started')
+#
+#
+#     train_test = BaseData()
+#     train_test.load_config("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml")
+#     #print(train_test.config)
+#
+#     train_test.preprocess()
+#     train_test.split_to_training_and_test()
+#
+#     #Add wikipedia data to corpus
+#     train_test.preprocess_wiki()
+#     train_test.add_wiki_to_training()
+#
+#     # Split articles
+#     train_test.split_articles()
+#
+#     ##
+#     test = dataAugmention()
+#     test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_torsdag_mlp/test_torsdag_mlp_training_split" )
+#     test.get_articles()
+#     test.create_fake_corpus()
+#     test.copyArtificialFolderIntoCorpus()
+#     print(test.output_folder)
+#     #test.get_articles()
+#     #print(len(test.text_array))
+#     #print(len(test.text_names))
+#     #print(len(test.dewey_array))
+#     logging.info('Finished')

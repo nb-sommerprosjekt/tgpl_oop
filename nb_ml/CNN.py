@@ -1,8 +1,7 @@
-from keras.preprocessing.text import Tokenizer, one_hot
+from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 from keras.layers import Input, Conv1D, MaxPooling1D, Flatten, Dense
-from keras import backend as K
 import numpy as np
 import gensim
 from keras.layers import Embedding
@@ -12,14 +11,11 @@ import time
 #import MLP
 import os
 import pickle
-import re
 #import evaluator2
 import utils
-from sklearn.metrics import accuracy_score
 import yaml
 from keras import backend as K
 K.set_image_dim_ordering('tf')
-import matplotlib.pyplot as plt
 import gc
 
 
@@ -117,11 +113,11 @@ class cnn():
         #
         #
         save_model_path = self.modelDir+"/model.bin"
-        utils.log_model_stats(model_directory = self.modelDir , training_set_name = self.trainingSetPath
-                             ,training_set = self.x_train,num_classes = num_classes, vocab_size = self.vocabSize,
-                             max_sequence_length= self.maxSequenceLength, epochs=self.epochs, time_elapsed = timeElapsed,
-                             path_to_model= save_model_path, loss_model =self.lossModel,  vectorization_type= None,
-                             validation_split = self.validationSplit, word2vec = self.w2vPath)
+        utils.log_model_stats(model_directory = self.modelDir, training_set_name = self.trainingSetPath
+                              , training_set = self.x_train, num_classes = num_classes, vocab_size = self.vocabSize,
+                              max_sequence_length= self.maxSequenceLength, epochs=self.epochs, time_elapsed = timeElapsed,
+                              path_to_model= save_model_path, loss_model =self.lossModel, vectorization_type= None,
+                              validation_split = self.validationSplit, word2vec = self.w2vPath)
 
         # #Saving model
         model.save(save_model_path)
@@ -256,7 +252,7 @@ class cnn():
         print('Test_score:', str(test_score))
         print('Test Accuracy', str(test_accuracy))
         #k_top_labels=3
-        predictions = utils.prediction(model, self.x_test, k_top_labels,labels_index)
+        predictions = utils.prediction(model, self.x_test, k_top_labels, labels_index)
 
         #Writing results to txt-file.
         with open(self.modelDir+"/result.txt",'a') as result_file:
@@ -346,11 +342,11 @@ class cnn():
     #                     print("Noe gikk galt, prøver gjenkjenning på nytt.")
     #                     cnn_pred(TEST_SET, test_mod_dir, k_top_labels)
 
-if __name__ == '__main__':
-    test = cnn("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/cnn.yml")
-    test.fit()
-    test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", 3)
-    print(test.modelDir)
+#if __name__ == '__main__':
+    # test = cnn("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/cnn.yml")
+    # test.fit()
+    # test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", 3)
+    # print(test.modelDir)
 
 #     vocab_vector = [5000]
 #     sequence_length_vector = [5000]

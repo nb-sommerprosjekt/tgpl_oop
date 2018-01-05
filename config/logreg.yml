@@ -1,0 +1,7 @@
+# python
+{
+training_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training,
+test_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test,
+minNumArticlesPerDewey : !!python/int 100,
+
+}

@@ -12,3 +12,4 @@ w2v_tgc/*
 nb_ml/__pycache__/*
 *lagring/*
 *.txt
+machine_learning_methods.py

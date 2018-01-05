@@ -3,9 +3,9 @@ import datetime
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-def get_articles(original_name):
+def get_articles(fasttext_text_file):
     # Tar inn en textfil som er labelet på fasttext-format. Gir ut to arrays. Et med deweys og et med tekstene. [deweys],[texts]
-    articles=open(original_name,"r")
+    articles=open(fasttext_text_file,"r")
     articles=articles.readlines()
     dewey_array = []
     docs = []
@@ -105,6 +105,8 @@ def findValidDeweysFromTrain(listOfDeweys, labelIndexDictFromTrain):
         if dewey in labelIndexDictFromTrain:
             valid_deweys.append(dewey)
     return valid_deweys
+
+
 
 def plotTrainHistory(model):
         plt.plot(model.history['acc'])

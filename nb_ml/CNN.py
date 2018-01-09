@@ -28,6 +28,8 @@ class cnn():
         self.x_test = []
         self.y_test = []
         self.embedding_matrix = []
+        self.predictions = []
+        self.accuracy = None
     def load_config(self, pathToConfigFile):
         with open(pathToConfigFile,"r") as file:
              self.config = yaml.load(file)
@@ -45,7 +47,7 @@ class cnn():
         self.w2vPath = self.config["w2vPath"]
         self.embeddingDim = self.config["embeddingDimensions"]
         self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
-
+        self.kPreds = self.config["kPreds"]
     def fit(self): #EPOCHS, FOLDER_TO_SAVE_MODEL, loss_model,
                   #VALIDATION_SPLIT, word2vec_file_name):
         '''Training embedded cnn model'''
@@ -182,9 +184,10 @@ class cnn():
         return embedding_matrix
 
 
-    def predict(self, test_set, k_top_labels):
+    def predict(self, test_set):
         '''Test module for CNN'''
         test_corpus_df = utils.get_articles_from_folder(test_set)
+        k_top_labels = self.kPreds
         #Loading model
 
 
@@ -248,17 +251,14 @@ class cnn():
 
         self.y_test = to_categorical(test_labels)
 
-        test_score, test_accuracy = model.evaluate(self.x_test, self.y_test, batch_size= self.batchSize, verbose=1)
-        print('Test_score:', str(test_score))
-        print('Test Accuracy', str(test_accuracy))
-        #k_top_labels=3
-        predictions = utils.prediction(model, self.x_test, k_top_labels, labels_index)
+        test_score, self.accuracy = model.evaluate(self.x_test, self.y_test, batch_size= self.batchSize, verbose=1)
+        self.predictions = utils.prediction(model, self.x_test, k_top_labels, labels_index)
 
         #Writing results to txt-file.
         with open(self.modelDir+"/result.txt",'a') as result_file:
             result_file.write('test_set:'+test_set+'\n'+
                               #'Test_score:'+ str(test_score)+ '\n'
-                              'Test_accuracy:' + str(test_accuracy)+'\n\n')
+                              'Test_accuracy:' + str(self.accuracy)+'\n\n')
         #return predictions
     #
     # def cnn_majority_rule_test(test_set_dewey,MODEL,MAX_SEQUENCE_LENGTH, TRAIN_TOKENIZER, LABEL_INDEX_VECTOR
@@ -341,7 +341,9 @@ class cnn():
     #
     #                     print("Noe gikk galt, prøver gjenkjenning på nytt.")
     #                     cnn_pred(TEST_SET, test_mod_dir, k_top_labels)
-
+    def printPredictionsAndAccuracy(self):
+        print(self.predictions)
+        print(self.accuracy)
 #if __name__ == '__main__':
     # test = cnn("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/cnn.yml")
     # test.fit()

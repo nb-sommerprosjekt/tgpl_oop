@@ -1,6 +1,6 @@
 import sys
 sys.path.append('/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/nb_ml')
-from nb_ml import CNN, MLP, preprocessing
+from nb_ml import CNN, MLP, preprocessing, logreg
 
 
 # ## Making preprocessing object
@@ -29,14 +29,21 @@ from nb_ml import CNN, MLP, preprocessing
 # test.create_fake_corpus()
 # test.copyArtificialFolderIntoCorpus()
 
-### Code for running CNN training and Predictio
-test = CNN.cnn("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/cnn.yml")
-test.fit()
-test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", 3)
-
-#
-# ### Code for running MLP training and Prediction
+# # ### Code for running CNN training and Predictio
+# test = CNN.cnn("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/cnn.yml")
+# test.fit()
+# test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
+# test.printPredictionsAndAccuracy()
+# #
+# ## Code for running MLP training and Prediction
 # model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
 # model.fit()
-# model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test",
-#               3, False)
+# model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
+# model.printPredictionsAndAccuracy()
+# print(model.predictions)
+
+### Code for running logistic regression training and prediction
+test = logreg.logReg("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/logreg.yml")
+test.fit_LogReg()
+test.predict()
+test.printPredictionsAndAccuracy()

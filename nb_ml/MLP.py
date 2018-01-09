@@ -29,6 +29,7 @@ class mlp(object):
         self.x_test = []
         self.y_test = []
         self.predictions = []
+        self.accuracy = None
         #MAX_SEQUENCE_LENGTH, \
         #EPOCHS, \
         #FOLDER_TO_SAVE_MODEL, \
@@ -54,6 +55,7 @@ class mlp(object):
         self.modelDir = None
         self.lossModel = self.config["lossModel"]
         self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
+        self.kPreds = self.config["kPreds"]
     def fit(self):
         '''Training model'''
         start_time= time.time()
@@ -147,13 +149,16 @@ class mlp(object):
 
         return x_train, y_train, tokenizer, num_classes, labels_index  # x_test, y_test, num_classes
 
-    def predict(self, TEST_SET, k_output_labels, isMajority_rule=True):
+    def predict(self, TEST_SET, isMajority_rule=True):
         # TEST_SET = deweys_and_texts
         '''Test module for MLP'''
         # format of test_set [[dewey][text_split1, text_split2,text_split3]]
         # Loading model
+        k_output_labels = self.kPreds
         model = load_model(os.path.join(self.model_directory, 'model.bin'))
 
+
+        ## TO-DO: PAKK INN ALLE DISSE FILINNHENTINGENE I EN METODE. BÅDE HER OG I CNN
         # loading tokenizer
         with open(os.path.join(self.model_directory, "tokenizer.pickle"), 'rb') as handle:
             tokenizer = pickle.load(handle)
@@ -190,18 +195,15 @@ class mlp(object):
         else:
             x_test, y_test = self.fasttextTest2mlp(TEST_SET, self.maxSequenceLength, tokenizer, labels_index,
                                               self.vectorizationType)
-            test_score,test_accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
+            test_score,self.accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
             self.predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
-
-            print('Test_score:', test_score)
-            print('Test Accuracy', test_accuracy)
         # Writing results to txt-file.
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
         #    result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')
         #return predictions
-
-
-
+    def printPredictionsAndAccuracy(self):
+        print(self.predictions)
+        print(self.accuracy)
     def fasttextTest2mlp(self ,fasttext_test_file, max_sequence_length, train_tokenizer, label_index_vector,
                          vectorization_type):
         ''' Preparing test data for MLP training'''
@@ -209,9 +211,7 @@ class mlp(object):
         self.x_test = test_corpus_df['text']
         self.y_test = test_corpus_df['dewey']
         validDeweys = utils.findValidDeweysFromTrain(self.y_test, label_index_vector)
-        print(len(set(validDeweys)))
-        print(validDeweys)
-        #test_corpus_df = test_corpus_df[test_corpus_df['dewey'].isin(validDeweys)]
+
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
         print(test_corpus_df.describe())
 

@@ -53,8 +53,8 @@ class logReg():
         x_test_vectorized = vectorizer.transform(self.x_test)
         self.x_test = x_test_vectorized
         print("Starter trening")
-        xgb = LogisticRegression()
-        logMod = xgb.fit(x_train_vectorized[:1000],self.y_train[:1000])
+        mod = LogisticRegression()
+        logMod = mod.fit(x_train_vectorized,self.y_train)
         self.model = logMod
         self.saveModel()
 

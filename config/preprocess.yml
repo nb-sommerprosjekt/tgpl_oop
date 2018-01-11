@@ -1,25 +1,23 @@
 # python
 {
- nameOfCorpus : test_fredag_mlp_new10
-,sourceDataSet : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/tgc
-,corpusSaveDestination : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set
-,corpus_name_folder : test_fredag_mlp_new10
+ nameOfCorpus : !!python/str test_fredag_mlp_januar
+,sourceDataSet : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/tgc
+,corpusSaveDestination : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set
+,corpus_name_folder : !!python/str test_fredag_mlp_januar
 ,stemming : !!python/bool False
 ,sentences : !!python/bool False
 ,stop_words : !!python/bool True
 ,extra_functions : !!python/bool False
 ,lower_case : !!python/bool True
-,test_ratio : 0.20
-,deweyLength: 3
-,wikipedia : False
+,test_ratio : !!python/float 0.20
+,deweyLength: !!python/int 3
+,wikipedia : !!python/bool False
 ,wiki_data_set_name : !!python/str tgc_wiki
-,wiki_name_corpus: test_mandag_cnn_wiki
-,article_length: 500
-
+,wiki_name_corpus: !!python/str test_mandag_cnn_wiki
+,article_length: !!python/int 500
 ,artificial_folder : artificial
 
-
-# data_augmentation
+# Data augmentation
 ,da_run : !!python/bool False
 ,da_splits : !!python/int 10
 ,da_noise_percentage : !!python/int 10

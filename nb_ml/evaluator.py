@@ -25,10 +25,6 @@ class evaluator():
             self.config = yaml.load(file)
 
     def get_predictions(self, predictions, correct_labels):
-        #print("len preds orig: " + str(len(predictions)))
-        #print("Preds orig: " + str(predictions))
-        print(predictions)
-        print(correct_labels)
 
         prediction_lists2 = []
         for i in range(0, len(predictions[0])):
@@ -37,60 +33,46 @@ class evaluator():
             for j in range(len(prediction_list)):
                 prediction_lists2[j].append(prediction_list[j])
         prediction_lists = prediction_lists2
-        #print(prediction_lists)
 
-        print(prediction_lists)
-        print(len(prediction_lists))
         self.predictions = prediction_lists
-        # print("shape på preds: "+ str(len(prediction_lists)))
         self.first_predictions = prediction_lists[0]
-        # print(prediction_lists[0])
-        # print("lengde på preds "+str(len(prediction_lists[0])))
         self.correct_labels = correct_labels
-        # print(self.predictions)
-        # print(self.first_predictions)
-        # print(self.correct_labels)
-
-   # def evaluate_multiple_predictions(self):
-   #     for i in len(self.predictions):
 
 
     def evaluate_prediction(self):
         num_classes = list(set(self.correct_labels))
 
         print(classification_report(self.correct_labels, self.first_predictions, num_classes))
-        #correct_labels_categorical = y_categorial.argmax(1)
         print("accuracy:" +str(accuracy_score(self.correct_labels,self.first_predictions)))
-        #print(self.correct_labels)
         print("Number of classes: "+str(num_classes))
 
 
-    def compute_precision(self):
-        true_positives_vector = np.diag(self.confusion_matrix)
-        with np.errstate(divide='ignore', invalid='ignore'):
-            self.precision_class = true_positives_vector / np.sum(self.confusion_matrix, axis=0, dtype=np.float)
-        self.precision_tot = np.sum(self.precision_class)/2
-    def compute_recall(self):
-        a = np.diag(self.confusion_matrix)
-        b = np.sum(self.confusion_matrix, axis=1, dtype=np.float)
-        with np.errstate(divide='ignore', invalid='ignore'):
-            self.recall = np.true_divide(a, b)
-        self.recall_class = np.nan_to_num(self.recall)
-        self.recall_tot = np.sum(self.recall_class)
-    def compute_f1(self):
-        with np.errstate(divide='ignore', invalid='ignore'):
-            self.f1_class = 2 * (self.precision_class * self.recall) / (self.precision_class + self.recall)
-        self.f1_class = np.nan_to_num(self.f1_class)
-        self.f1_tot = np.sum(self.f1_class)
-
-    def compute_accuracy(self, true_positives, true_negatives, false_positives, false_negatives):
-        self.accuracy = (true_positives+true_negatives)/(true_positives + true_negatives + false_positives + false_negatives)
-    def majority_rule(self):
-        print("Something will come here")
-    def printKeyMetrics(self):
-        print("Total precision: " + str(self.precision_tot))
-        print("Total f1: " + str(self.f1_tot))
-        print("Accuracy: "+ str(self.accuracy))
+    # def compute_precision(self):
+    #     true_positives_vector = np.diag(self.confusion_matrix)
+    #     with np.errstate(divide='ignore', invalid='ignore'):
+    #         self.precision_class = true_positives_vector / np.sum(self.confusion_matrix, axis=0, dtype=np.float)
+    #     self.precision_tot = np.sum(self.precision_class)/2
+    # def compute_recall(self):
+    #     a = np.diag(self.confusion_matrix)
+    #     b = np.sum(self.confusion_matrix, axis=1, dtype=np.float)
+    #     with np.errstate(divide='ignore', invalid='ignore'):
+    #         self.recall = np.true_divide(a, b)
+    #     self.recall_class = np.nan_to_num(self.recall)
+    #     self.recall_tot = np.sum(self.recall_class)
+    # def compute_f1(self):
+    #     with np.errstate(divide='ignore', invalid='ignore'):
+    #         self.f1_class = 2 * (self.precision_class * self.recall) / (self.precision_class + self.recall)
+    #     self.f1_class = np.nan_to_num(self.f1_class)
+    #     self.f1_tot = np.sum(self.f1_class)
+    #
+    # def compute_accuracy(self, true_positives, true_negatives, false_positives, false_negatives):
+    #     self.accuracy = (true_positives+true_negatives)/(true_positives + true_negatives + false_positives + false_negatives)
+    # def majority_rule(self):
+    #     print("Something will come here")
+    # def printKeyMetrics(self):
+    #     print("Total precision: " + str(self.precision_tot))
+    #     print("Total f1: " + str(self.f1_tot))
+    #     print("Accuracy: "+ str(self.accuracy))
 # if __name__ == '__main__':
 #     evalTest = evaluator('/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml')
 #     correct_list = [1,1,1,1,1,1]

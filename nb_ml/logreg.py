@@ -9,7 +9,8 @@ import numpy as np
 import datetime
 import os
 import dill
-class logReg():
+from evaluator import evaluator
+class logReg(evaluator):
 
     def __init__(self, pathToConfigFile):
         self.config = {}
@@ -19,7 +20,7 @@ class logReg():
         self.correct_deweys = None
         self.validDeweys = []
         self.model = None
-        self.predictions = []
+        self.predictions = None
         self.accuracy = None
 
     def load_config(self, pathToConfigFile):
@@ -31,8 +32,10 @@ class logReg():
         self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
         self.kPreds = self.config["kPreds"]
         self.modelsDirectory =self.config["modelsDirectory"]
+        self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
+        super(logReg, self).__init__(self.evaluatorConfigPath)
+
     def fit_LogReg(self):
-        print("Something will be written here")
         self.fasttext2sklearn()
         #tfidf = TfidfVectorizer(norm = 'l2', min_df = 2, use_idf = True, smooth_idf= False, sublinear_tf = True, ngram_range = (1,4),
         #                        max_features = 20000)
@@ -86,27 +89,31 @@ class logReg():
         model_path = save_path + "/model.pickle"
         print("Modellen er lagret i :"+ model_path)
     def getPredictionsAndAccuracy(self):
+
+
         predictions = []
         topNpredictions = []
 
         if self.x_test.shape[0] > 0 and self.y_test.shape[0] > 0 and self.model is not None:
             for text in self.x_test:
-                topN_temp = []
+
                 predictions.append(self.model.predict(text))
                 pred_proba = self.model.predict_proba(text)
                 n = self.kPreds
                 topN_prob_indexes = np.argsort(pred_proba)[:, :-n - 1:-1]
                 for val in topN_prob_indexes:
-                    topN_temp.append(self.model.classes_[val])
-                topNpredictions.append(topN_temp)
+                    print(self.model.classes_[val])
+                    topNpredictions.append(self.model.classes_[val])
+
 
             accuracy = accuracy_score(self.y_test, predictions)
+            print("preds fra sklearn:" + str(predictions))
         else:
             print("Input var ikke riktig. Sjekk om modell og  testsett eksisterer")
-        #print(accuracy)
+
         self.accuracy = accuracy
         self.predictions =topNpredictions
-        #return predictions, accuracy, topNpredictions
+        return predictions, accuracy, topNpredictions
     # def logReg(x_train, y_train, vectorization_type, penalty, dual, tol, C, fit_intercept, intercept_scaling,
     #            class_weight, random_state, solver, max_iter, multi_class, verbose, warm_start, n_jobs):
     #

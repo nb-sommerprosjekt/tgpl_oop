@@ -25,8 +25,11 @@ class evaluator():
             self.config = yaml.load(file)
 
     def get_predictions(self, predictions, correct_labels):
-        print("len preds orig: " + str(len(predictions)))
-        print("Preds orig: " + str(predictions))
+        #print("len preds orig: " + str(len(predictions)))
+        #print("Preds orig: " + str(predictions))
+        print(predictions)
+        print(correct_labels)
+
         prediction_lists2 = []
         for i in range(0, len(predictions[0])):
             prediction_lists2.append([])
@@ -36,7 +39,8 @@ class evaluator():
         prediction_lists = prediction_lists2
         #print(prediction_lists)
 
-
+        print(prediction_lists)
+        print(len(prediction_lists))
         self.predictions = prediction_lists
         # print("shape på preds: "+ str(len(prediction_lists)))
         self.first_predictions = prediction_lists[0]
@@ -53,41 +57,13 @@ class evaluator():
 
     def evaluate_prediction(self):
         num_classes = list(set(self.correct_labels))
-        # print(self.correct_labels)
-        # print(self.first_predictions)
-        # print(len(self.correct_labels))
-        # print(len(self.first_predictions))
-        #y_prediction = np.array(self.correct_labels)
-        #y_categorial = np_utils.to_categorical(y_prediction, num_classes)
+
         print(classification_report(self.correct_labels, self.first_predictions, num_classes))
         #correct_labels_categorical = y_categorial.argmax(1)
         print("accuracy:" +str(accuracy_score(self.correct_labels,self.first_predictions)))
         #print(self.correct_labels)
         print("Number of classes: "+str(num_classes))
-        # self.confusion_matrix = confusion_matrix(self.correct_labels, self.first_predictions, labels = num_classes)
-        # self.compute_recall()
-        # self.compute_precision()
-        #
-        # true_positives_vector = []
-        # false_positives_vector = []
-        # false_negatives_vector = []
-        # true_negatives_vector = []
-        # for i in range(0, len(self.confusion_matrix)):
-        #     TP_of_class_i = self.confusion_matrix[i, i]
-        #     FP_of_class_i = np.sum(self.confusion_matrix, axis=0)[i] - self.confusion_matrix[i, i]  # The corresponding column for class_i - TP
-        #     FN_of_class_i = np.sum(self.confusion_matrix, axis=1)[i] - self.confusion_matrix[i, i]  # The corresponding row for class_i - TP
-        #     TN_of_class_i = np.sum(self.confusion_matrix) - TP_of_class_i - FP_of_class_i - FN_of_class_i
-        #     true_positives_vector.append(TP_of_class_i)
-        #     false_positives_vector.append(FP_of_class_i)
-        #     false_negatives_vector.append(FN_of_class_i)
-        #     true_negatives_vector.append(TN_of_class_i)
-        #
-        # true_positives = np.sum(true_positives_vector)
-        # false_positives = np.sum(false_positives_vector)
-        # false_negatives = np.sum(false_negatives_vector)
-        # true_negatives = np.sum(true_negatives_vector)
-        # self.compute_f1()
-        # self.compute_accuracy(true_positives,true_negatives,false_positives,false_negatives)
+
 
     def compute_precision(self):
         true_positives_vector = np.diag(self.confusion_matrix)

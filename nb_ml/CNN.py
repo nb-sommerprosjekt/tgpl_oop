@@ -27,6 +27,7 @@ class cnn():
         self.y_train = []
         self.x_test = []
         self.y_test = []
+        self.correct_deweys = None
         self.embedding_matrix = []
         self.predictions = []
         self.accuracy = None
@@ -230,7 +231,7 @@ class cnn():
         #         valid_deweys.update(dewey)
         self.y_test = test_corpus_df['dewey']
         self.x_test = test_corpus_df['text']
-
+        self.correct_deweys = test_corpus_df['dewey'].values
         validDeweys = utils.findValidDeweysFromTrain(self.y_test, labels_index)
         print(len(set(validDeweys)))
         print(validDeweys)

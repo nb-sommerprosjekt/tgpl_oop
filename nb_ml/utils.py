@@ -77,10 +77,13 @@ def log_model_stats(model_directory, training_set_name, training_set,
     model_stats_file.close()
 
 def prediction(MODEL,X_TEST,k_preds, label_indexes):
+    #print("Test_lengde: " + str(len(X_TEST))) #2173
     predictions = MODEL.predict(x=X_TEST)
-
+    #print("pred_lengde:" + str(len(predictions))) # 2173
     all_topk_labels = []
+    #print("predictions_subarray: "+ str(predictions[0]))
     for prediction_array in predictions:
+        #print("pred_array len: "+ str(len(prediction_array))) #255
         np_prediction = np.argsort(-prediction_array)[:k_preds]
         #print(list(np_prediction))
         topk_labels = []
@@ -92,10 +95,12 @@ def prediction(MODEL,X_TEST,k_preds, label_indexes):
                     label = label_name
                     topk_labels.append(label)
 
-            all_topk_labels.append(topk_labels)
+        all_topk_labels.append(topk_labels)
         #print(len(topk_labels))
     #print(all_topk_labels)
-
+    # print("len all topk labels: "+ str(len(all_topk_labels)))
+    # print("len all_topk_labels subarray: " + str(len(all_topk_labels[0])))
+    # print("all topk labels: " + str(all_topk_labels))
     return all_topk_labels
 
 def findValidDeweysFromTrain(listOfDeweys, labelIndexDictFromTrain):

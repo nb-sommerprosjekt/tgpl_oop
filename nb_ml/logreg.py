@@ -2,6 +2,7 @@ import yaml
 import utils
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.metrics import accuracy_score
 from xgboost import XGBClassifier
 import numpy as np
@@ -15,6 +16,7 @@ class logReg():
         self.load_config(pathToConfigFile = pathToConfigFile)
         self.x_train = []
         self.y_train = []
+        self.correct_deweys = None
         self.validDeweys = []
         self.model = None
         self.predictions = []
@@ -49,13 +51,16 @@ class logReg():
 
         self.y_test = test_corpus_df['dewey']
         self.x_test = test_corpus_df['text']
+        self.correct_deweys = test_corpus_df['dewey'].values
 
         x_test_vectorized = vectorizer.transform(self.x_test)
         self.x_test = x_test_vectorized
         print("Starter trening")
+
         mod = LogisticRegression()
-        logMod = mod.fit(x_train_vectorized,self.y_train)
-        self.model = logMod
+        mod.fit(x_train_vectorized, self.y_train)
+        #self.model = logMod
+        self.model = mod
         self.saveModel()
 
     def predict(self):

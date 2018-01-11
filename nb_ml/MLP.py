@@ -15,8 +15,9 @@ import re
 from sklearn.metrics import accuracy_score
 import utils
 import yaml
-
-class mlp(object):
+import gc
+from evaluator import evaluator
+class mlp(evaluator):
 
 
     def __init__(self, pathToConfig):
@@ -28,8 +29,11 @@ class mlp(object):
         self.y_train = []
         self.x_test = []
         self.y_test = []
+        self.correct_deweys = None
         self.predictions = []
         self.accuracy = None
+
+        super(mlp, self).__init__(self.evaluatorConfigPath)
         #MAX_SEQUENCE_LENGTH, \
         #EPOCHS, \
         #FOLDER_TO_SAVE_MODEL, \
@@ -41,21 +45,22 @@ class mlp(object):
 
         #self.load_config(pathToConfigFile)
         with open(pathToConfigFile,"r") as file:
-             self.config = yaml.load(file)
+             self.__config = yaml.load(file)
 
-        self.trainingSetPath=self.config["trainingSetPath"]
-        self.vocabSize = self.config["vocabSize"]
-        self.maxSequenceLength = self.config["maxSequenceLength"]
+        self.trainingSetPath=self.__config["trainingSetPath"]
+        self.vocabSize = self.__config["vocabSize"]
+        self.maxSequenceLength = self.__config["maxSequenceLength"]
 
-        self.batchSize = self.config["batchSize"]
-        self.vectorizationType = self.config["vectorizationType"]
-        self.epochs = self.config["epochs"]
-        self.validationSplit = self.config["validationSplit"]
-        self.folderToSaveModels = self.config["folderToSaveModels"]
+        self.batchSize = self.__config["batchSize"]
+        self.vectorizationType = self.__config["vectorizationType"]
+        self.epochs = self.__config["epochs"]
+        self.validationSplit = self.__config["validationSplit"]
+        self.folderToSaveModels = self.__config["folderToSaveModels"]
         self.modelDir = None
-        self.lossModel = self.config["lossModel"]
-        self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
-        self.kPreds = self.config["kPreds"]
+        self.lossModel = self.__config["lossModel"]
+        self.minNumArticlesPerDewey = self.__config["minNumArticlesPerDewey"]
+        self.kPreds = self.__config["kPreds"]
+        self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
     def fit(self):
         '''Training model'''
         start_time= time.time()
@@ -201,6 +206,7 @@ class mlp(object):
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
         #    result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')
         #return predictions
+        gc.collect()
     def printPredictionsAndAccuracy(self):
         print(self.predictions)
         print(self.accuracy)
@@ -210,14 +216,15 @@ class mlp(object):
         test_corpus_df = utils.get_articles_from_folder(fasttext_test_file)
         self.x_test = test_corpus_df['text']
         self.y_test = test_corpus_df['dewey']
+        #self.correct_deweys = test_corpus_df['dewey'].values
         validDeweys = utils.findValidDeweysFromTrain(self.y_test, label_index_vector)
 
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
-        print(test_corpus_df.describe())
+        #print(test_corpus_df.describe())
 
         self.y_test = test_corpus_df['dewey']
         self.x_test = test_corpus_df['text']
-
+        self.correct_deweys = self.y_test.values
 
         test_labels = []
         for dewey in self.y_test:

@@ -5,5 +5,6 @@ test_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/t
 vectorizationType: !!python/str count,
 minNumArticlesPerDewey : !!python/int 50,
 kPreds : !!python/int 5,
-modelsDirectory : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/logReg
+modelsDirectory : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/logReg,
+
 }

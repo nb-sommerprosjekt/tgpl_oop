@@ -5,7 +5,7 @@
     maxSequenceLength : !!python/int 1000,
     batchSize : !!python/int 64,
     vectorizationType : !!python/str binary,
-    epochs : !!python/int 10,
+    epochs : !!python/int 1,
     validationSplit : !!python/float 0.2,
     folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/cnn,
     lossModel : !!python/str categorical_crossentropy,

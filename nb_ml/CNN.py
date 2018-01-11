@@ -17,9 +17,9 @@ import yaml
 from keras import backend as K
 K.set_image_dim_ordering('tf')
 import gc
+from evaluator import evaluator
 
-
-class cnn():
+class cnn(evaluator):
     def __init__(self, pathToConfigFile):
         self.config = {}
         self.load_config(pathToConfigFile)
@@ -31,6 +31,7 @@ class cnn():
         self.embedding_matrix = []
         self.predictions = []
         self.accuracy = None
+        super(cnn, self).__init__(self.evaluatorConfigPath)
     def load_config(self, pathToConfigFile):
         with open(pathToConfigFile,"r") as file:
              self.config = yaml.load(file)
@@ -49,6 +50,7 @@ class cnn():
         self.embeddingDim = self.config["embeddingDimensions"]
         self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
         self.kPreds = self.config["kPreds"]
+        self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
     def fit(self): #EPOCHS, FOLDER_TO_SAVE_MODEL, loss_model,
                   #VALIDATION_SPLIT, word2vec_file_name):
         '''Training embedded cnn model'''
@@ -231,7 +233,7 @@ class cnn():
         #         valid_deweys.update(dewey)
         self.y_test = test_corpus_df['dewey']
         self.x_test = test_corpus_df['text']
-        self.correct_deweys = test_corpus_df['dewey'].values
+
         validDeweys = utils.findValidDeweysFromTrain(self.y_test, labels_index)
         print(len(set(validDeweys)))
         print(validDeweys)
@@ -241,7 +243,7 @@ class cnn():
 
         self.y_test = test_corpus_df['dewey']
         self.x_test = test_corpus_df['text']
-
+        self.correct_deweys = self.y_test.values
         test_labels = []
         for dewey in self.y_test:
                 test_labels.append(labels_index[dewey])

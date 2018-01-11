@@ -279,49 +279,49 @@ class mlp(evaluator):
 
         return test_score, test_accuracy
 
-    def run_mlp_tests(self, training_set, test_set, save_model_folder,
-                      batch_size, vocab_size_vector, sequence_length_vector, epoch_vector, loss_model,
-                      vectorization_type, validation_split, k_output_labels, isMajority_rule=True):
-
-        if isinstance(vocab_size_vector, str):
-            vocab_size_vector = [int(vocab_size_vector)]
-        else:
-            vocab_size_vector = list(map(int, vocab_size_vector))
-
-        if isinstance(sequence_length_vector, str):
-            sequence_length_vector = [int(sequence_length_vector)]
-        else:
-            sequence_length_vector = list(map(int, sequence_length_vector))
-
-        if isinstance(vocab_size_vector, str):
-            epoch_vector = [int(epoch_vector)]
-        else:
-            epoch_vector = list(map(int, epoch_vector))
-        k_output_labels = int(k_output_labels)
-
-        '''Function for running test and training with different combinations of vocab_size, sequence_lenghts and epochs'''
-        for vocab_test in vocab_size_vector:
-            for sequence_length_test in sequence_length_vector:
-                for epoch_test in epoch_vector:
-
-                    MOD_DIR = self.train_mlp(TRAINING_SET=training_set,
-                                        BATCH_SIZE=batch_size,
-                                        VOCAB_SIZE=vocab_test,
-                                        MAX_SEQUENCE_LENGTH=sequence_length_test,
-                                        EPOCHS=epoch_test,
-                                        FOLDER_TO_SAVE_MODEL=save_model_folder,
-                                        LOSS_MODEL=loss_model,
-                                        VECTORIZATION_TYPE=vectorization_type,
-                                        VALIDATION_SPLIT=validation_split
-                                        )
-
-                    print("Setter igang test")
-                    try:
-                        self.test_mlp(test_set, MOD_DIR, k_output_labels, isMajority_rule)
-                    except ValueError:
-
-                        print("Noe gikk feil med testen, prøver på nytt")
-                        self.test_mlp(test_set, MOD_DIR, k_output_labels, isMajority_rule)
+    # def run_mlp_tests(self, training_set, test_set, save_model_folder,
+    #                   batch_size, vocab_size_vector, sequence_length_vector, epoch_vector, loss_model,
+    #                   vectorization_type, validation_split, k_output_labels, isMajority_rule=True):
+    #
+    #     if isinstance(vocab_size_vector, str):
+    #         vocab_size_vector = [int(vocab_size_vector)]
+    #     else:
+    #         vocab_size_vector = list(map(int, vocab_size_vector))
+    #
+    #     if isinstance(sequence_length_vector, str):
+    #         sequence_length_vector = [int(sequence_length_vector)]
+    #     else:
+    #         sequence_length_vector = list(map(int, sequence_length_vector))
+    #
+    #     if isinstance(vocab_size_vector, str):
+    #         epoch_vector = [int(epoch_vector)]
+    #     else:
+    #         epoch_vector = list(map(int, epoch_vector))
+    #     k_output_labels = int(k_output_labels)
+    #
+    #     '''Function for running test and training with different combinations of vocab_size, sequence_lenghts and epochs'''
+    #     for vocab_test in vocab_size_vector:
+    #         for sequence_length_test in sequence_length_vector:
+    #             for epoch_test in epoch_vector:
+    #
+    #                 MOD_DIR = self.train_mlp(TRAINING_SET=training_set,
+    #                                     BATCH_SIZE=batch_size,
+    #                                     VOCAB_SIZE=vocab_test,
+    #                                     MAX_SEQUENCE_LENGTH=sequence_length_test,
+    #                                     EPOCHS=epoch_test,
+    #                                     FOLDER_TO_SAVE_MODEL=save_model_folder,
+    #                                     LOSS_MODEL=loss_model,
+    #                                     VECTORIZATION_TYPE=vectorization_type,
+    #                                     VALIDATION_SPLIT=validation_split
+    #                                     )
+    #
+    #                 print("Setter igang test")
+    #                 try:
+    #                     self.test_mlp(test_set, MOD_DIR, k_output_labels, isMajority_rule)
+    #                 except ValueError:
+    #
+    #                     print("Noe gikk feil med testen, prøver på nytt")
+    #                     self.test_mlp(test_set, MOD_DIR, k_output_labels, isMajority_rule)
 # if __name__ == '__main__':
 #     model = mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
 #     model.fit()

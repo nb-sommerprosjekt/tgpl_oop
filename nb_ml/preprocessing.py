@@ -42,7 +42,7 @@ import sys
 class Corpus():
     #config = {}
 
-    def __init__(self):
+    def __init__(self, pathToConfigFile):
         self.config={}
         self.name_corpus = None
         self.data_set_name = None
@@ -54,6 +54,7 @@ class Corpus():
         self.test_folder = None
         self.article_length = None
         self.split_folder = None
+        self.load_config(pathToConfigFile)
     def load_config(self, pathToConfigFile):
 
         #config={}
@@ -358,7 +359,7 @@ class dataAugmention:
         self.da_splits = self.config["da_splits"]
         self.noise_method = self.config["da_noise_method"]
         self.pathToInputFolder = pathToInputFolder
-        self.output_folder = self.config["data_set_name"]+"/"+self.config["name_corpus"]+"/"+self.config["corpus_name_folder"]+"/"+self.config["artificial_folder"]
+        self.output_folder = self.config["corpusSaveDestination"]+"/"+self.config["corpus_name_folder"]+"/"+self.config["nameOfCorpus"]+"/"+self.config["artificial_folder"]
         with open(self.config["PathToNoisePickle"], 'rb') as handle:
             self.MostSimilarPickle = pickle.load(handle)
         #self.text_array = pathToInputFolder

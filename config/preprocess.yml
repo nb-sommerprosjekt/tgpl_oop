@@ -20,7 +20,7 @@
 # Data augmentation
 ,da_run : !!python/bool False
 ,da_splits : !!python/int 10
-,da_noise_percentage : !!python/int 10
+,da_noise_percentage : !!python/int 20
 ,da_noise_method : !!python/str noise_on_parts
 ,PathToNoisePickle : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/resources/most_similar_dict.pickle
 }

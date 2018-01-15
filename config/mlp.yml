@@ -9,7 +9,7 @@
     validationSplit : !!python/float 0.2,
     folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/mlp,
     lossModel : !!python/str categorical_crossentropy,
-    minNumArticlesPerDewey : !!python/int 50,
+    minNumArticlesPerDewey : !!python/int 60,
     kPreds : !!python/int 5,
     evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml
 }

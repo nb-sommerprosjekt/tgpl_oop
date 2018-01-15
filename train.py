@@ -9,7 +9,8 @@ from nb_ml import CNN, MLP, preprocessing, logreg
 # test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
 # test.get_predictions(test.predictions, test.correct_deweys)
 # test.evaluate_prediction()
-#test.printKeyMetrics()
+# test.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/cnnlogTest.txt")
+
 
 #test.printPredictionsAndAccuracy()
 #

@@ -346,20 +346,20 @@ class dataAugmention:
         self.da_splits = 10
         self.MostSimilarPickle = None
         self.noise_method = "uniform_noise"
-        self.pathToInputFolder = None
+        self.sourceCorpus = None
         self.text_array = []
         self.dewey_array = []
         self.text_names = []
-        self.output_folder = None
+        self.destinationCorpus = None
 
-    def getConfig(self, pathToConfigFile, pathToInputFolder):
+    def getConfig(self, pathToConfigFile, sourceCorpus, destinationCorpus):
         with open(pathToConfigFile,"r") as file:
              self.config = yaml.load(file)
         self.noise_percentage = self.config["da_noise_percentage"]
         self.da_splits = self.config["da_splits"]
         self.noise_method = self.config["da_noise_method"]
-        self.pathToInputFolder = pathToInputFolder
-        self.output_folder = self.config["corpusSaveDestination"]+"/"+self.config["corpus_name_folder"]+"/"+self.config["nameOfCorpus"]+"/"+self.config["artificial_folder"]
+        self.sourceCorpus = sourceCorpus
+        self.destinationCorpus = destinationCorpus
         with open(self.config["PathToNoisePickle"], 'rb') as handle:
             self.MostSimilarPickle = pickle.load(handle)
         #self.text_array = pathToInputFolder
@@ -368,7 +368,7 @@ class dataAugmention:
     def get_articles(self):
     #     # Tar inn en folder som er labelet på fasttext-format. Gir ut to arrays. Et med deweys og et med tekstene. [deweys],[texts]
         #arr = os.listdir(folder)
-        folder = self.pathToInputFolder
+        folder = self.sourceCorpus
         arr_txt = [path for path in os.listdir(folder) if path.endswith(".txt")]
         arr_txt.sort()
 
@@ -387,8 +387,8 @@ class dataAugmention:
             print("Antallet splits må være høyere enn 0, sjekk config")
             sys.exit()
         print("Tekstdata på plass")
-        if not os.path.exists(self.output_folder):
-            os.makedirs(self.output_folder)
+        if not os.path.exists(self.destinationCorpus):
+            os.makedirs(self.destinationCorpus)
         text_list = list(enumerate(self.text_names))
         total_number_of_texts = len(self.text_names)
         for index, text_name in text_list:
@@ -413,7 +413,7 @@ class dataAugmention:
             for noise_text_index, noise_text in enumerate(full_texts_with_noise):
 
                 noise_text_w_label = "__label__" + str(self.dewey_array[index]) + ' ' + noise_text
-                noise_split_file = open(self.output_folder + '/' + text_name.replace('_split','') + '_' + str(noise_text_index)+".txt",'w')
+                noise_split_file = open(self.destinationCorpus + '/' + text_name.replace('_split', '') + '_' + str(noise_text_index) + ".txt", 'w')
                 noise_split_file.write(noise_text_w_label)
                 noise_split_file.close()
             if (index+1%1000==0):
@@ -551,72 +551,7 @@ class dataAugmention:
 
 
     def copyArtificialFolderIntoCorpus(self):
-         copy_tree(self.output_folder, self.pathToInputFolder)
-    #
-    # def make_vocab(array_of_texts):
-    #     vocab = set()
-    #     total_words = 0
-    #     for text in array_of_texts:
-    #         tokenize_text = text.split(" ")
-    #
-    #         total_words+=len(tokenize_text)
-    #         for word in tokenize_text:
-    #                     vocab.add(word.lower())
-    #     print(vocab)
-    #     print(len(vocab))
-    #     print(str(total_words))
-    #     return vocab
-    # def make_most_similar_dictionary(vocab_set, w2v_model):
-    #     # function which takes vocab as input, queries the w2v model for each word in vocab and gets the most similar
-    #     # word semantically and saves it in a dictionary.
-    #     most_similar = {}
-    #     progress_count = 0
-    #     vocab_len = len(vocab_set)
-    #     array = list(vocab_set)
-    #     for word in array:
-    #         progress_count +=1
-    #         try:
-    #             similar_words = w2v_model.wv.similar_by_word(word.lower(), topn=1)
-    #             most_similar_word = similar_words[0][0]
-    #         except KeyError:
-    #             most_similar_word = []
-    #             print(word + "finnes ikke i vokabularet")
-    #
-    #         if len(most_similar_word) >0:
-    #             most_similar[word] = most_similar_word
-    #         print(str(progress_count)+"/" +str(vocab_len) + " er fullført" )
-    #     print(len(most_similar))
-    #
-    #     with open('most_similar_dict.pickle', 'wb') as handle:
-    #         pickle.dump(most_similar, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    #     print(len(most_similar))
-    #     return most_similar
-
-
-    # def remove_words_from_text(tokenized_text, percentage):
-    #     ''' Chooses random words in the tokenized text and removes them. The amount is chosen by the percentage provided. It is not recommended to remove more than 10 percent. Returns reduced tokenized string.'''
-    #     num_elements_to_remove = floor((percentage/100) * len(tokenized_text))
-    #     words_to_remove = random.sample(tokenized_text, num_elements_to_remove)
-    #
-    #     reduced_text = tokenized_text
-    #     for words in words_to_remove:
-    #         reduced_text.remove(words)
-    #     return ' '.join(reduced_text)
-    #
-    # def remove_parts_of_text(tokenized_text, percentage):
-    #     '''Removes a random part of the input-tokenized text, size set by the percentage, and outputs a reduced tokenized text.'''
-    #     number_of_splits = floor(100/percentage)
-    #     array_of_text_parts = array_split(tokenized_text, number_of_splits)
-    #     del array_of_text_parts[random.randint(0, len(array_of_text_parts) - 1)]
-    #     reduced_array = [item for sublist in array_of_text_parts for item in sublist]
-    #
-    #     return reduced_array
-    #
-    # def add_words_to_text(tokenized_text, percentage, which_dewey_is_this_from):
-    #     ''' Adds words randomly to text. Words are chosen either from word2vec or tfidf-matrix relevant to the articles dewey. This function returns the modified tokenized_text'''
-    #
-
-
+         copy_tree(self.sourceCorpus, self.destinationCorpus)
 
 #
 # if __name__ == '__main__':

@@ -24,7 +24,7 @@ from nb_ml import preprocessing
 ## Create fake articles
 test = preprocessing.dataAugmention()
 test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess.yml",
-               "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_torsdag_mlp/test_torsdag_mlp")
+               "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test")
 test.get_articles()
 test.create_fake_corpus()
 test.copyArtificialFolderIntoCorpus()

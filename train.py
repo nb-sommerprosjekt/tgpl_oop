@@ -16,12 +16,13 @@ from nb_ml import CNN, MLP, preprocessing, logreg
 #
 ## Code for running MLP training and Prediction
 model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
-model.fit()
-model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
+print(MLP.config)
+#model.fit()
+#model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
 #model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training", False)
-model.get_predictions(model.predictions, model.correct_deweys)
-model.evaluate_prediction()
-model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
+#model.get_predictions(model.predictions, model.correct_deweys)
+#model.evaluate_prediction()
+#model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
 # model.printKeyMetrics()
 
 

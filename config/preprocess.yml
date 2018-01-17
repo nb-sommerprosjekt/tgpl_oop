@@ -1,9 +1,9 @@
 # python
 {
- nameOfCorpus : !!python/str test_fredag_mlp_januar2
-,sourceDataSet :  !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/tgc
+ nameOfCorpus : !!python/str tgcForOptimization
+,sourceDataSet :  !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_tgc
 ,corpusSaveDestination : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set
-,corpus_name_folder : !!python/str test_fredag_mlp_januar2
+,corpus_name_folder : !!python/str tgcForOptimization
 ,stemming : !!python/bool False
 ,sentences : !!python/bool False
 ,stop_words : !!python/bool True

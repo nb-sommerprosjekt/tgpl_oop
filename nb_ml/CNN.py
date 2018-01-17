@@ -93,7 +93,7 @@ class cnn(evaluator):
                   validation_split= self.validationSplit
                    )
         # list all data in history
-        utils.plotTrainHistory(cnn_model)
+        #utils.plotTrainHistory(cnn_model)
         #print(history.history.keys())
         # summarize history for accuracy
 
@@ -203,7 +203,6 @@ class cnn(evaluator):
         with open(self.modelDir + '/label_indexes.pickle', 'rb') as handle:
             labels_index = pickle.load(handle)
 
-
         # Loading parameters like max_sequence_length, vocabulary_size and vectorization_type
         # with open(self.modelDir+'/model_stats', 'r') as params_file:
         #     params_data = params_file.read()
@@ -235,8 +234,7 @@ class cnn(evaluator):
         self.x_test = test_corpus_df['text']
 
         validDeweys = utils.findValidDeweysFromTrain(self.y_test, labels_index)
-        print(len(set(validDeweys)))
-        print(validDeweys)
+
         #test_corpus_df = test_corpus_df[test_corpus_df['dewey'].isin(validDeweys)]
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
         print(test_corpus_df.describe())
@@ -262,6 +260,10 @@ class cnn(evaluator):
             result_file.write('test_set:'+test_set+'\n'+
                               #'Test_score:'+ str(test_score)+ '\n'
                               'Test_accuracy:' + str(self.accuracy)+'\n\n')
+    def run_evaluation(self):
+        super(cnn, self).get_predictions(self.predictions, self.correct_deweys)
+        super(cnn, self).evaluate_prediction()
+
 
     def printPredictionsAndAccuracy(self):
         print(self.predictions)

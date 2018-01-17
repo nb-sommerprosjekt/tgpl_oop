@@ -85,6 +85,9 @@ class fast_text(evaluator):
 
     def findValidDeweysFT(self):
         self.validDeweys = list(set(self.y_train))
+    def run_evaluation(self):
+        super(fast_text, self).get_predictions(self.predictions, self.correct_deweys)
+        super(fast_text, self).evaluate_prediction()
 
 # if __name__ == '__main__':
 #     test = fast_text("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/fasttext.yml")

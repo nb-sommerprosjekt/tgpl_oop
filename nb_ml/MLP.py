@@ -89,7 +89,7 @@ class mlp(evaluator):
                   verbose=1,
                   validation_split=self.validationSplit
                   )
-        utils.plotTrainHistory(model_history)
+        #utils.plotTrainHistory(model_history)
         # Lagre modell
         model_time_stamp = '{:%Y%m%d%H%M}'.format(datetime.datetime.now())
         self.model_directory = os.path.join(self.folderToSaveModels,
@@ -202,11 +202,18 @@ class mlp(evaluator):
                                               self.vectorizationType)
             test_score,self.accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
             self.predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
+            gc.collect()
         # Writing results to txt-file.
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
         #    result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')
         #return predictions
-        gc.collect()
+
+
+    def run_evaluation(self):
+        super(mlp, self).get_predictions(self.predictions, self.correct_deweys)
+        super(mlp, self).evaluate_prediction()
+
+
     def printPredictionsAndAccuracy(self):
         print(self.predictions)
         print(self.accuracy)

@@ -128,6 +128,9 @@ class logReg(evaluator):
     def findValidDeweysSklearn(self):
         self.validDeweys = list(set(self.y_train))
 
+    def run_evaluation(self):
+        super(logReg, self).get_predictions(self.predictions, self.correct_deweys)
+        super(logReg, self).evaluate_prediction()
 
 # if __name__ == '__main__':
 #     print("starting")

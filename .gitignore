@@ -16,3 +16,7 @@ machine_learning_methods.py
 new_artificial_test/*
 nb_ml/model.bin
 *.bin
+config (copy)/
+preprocessing (copy).py
+train (copy).py
+

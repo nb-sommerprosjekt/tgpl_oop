@@ -14,11 +14,20 @@ from nb_ml import CNN, MLP, preprocessing, logreg, fast_text
 #test.printPredictionsAndAccuracy()
 #
 ## Code for running MLP training and Prediction
+<<<<<<< HEAD
 model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
 model.fit()
 model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
 model.run_evaluation()
 model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
+=======
+
+# model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
+# model.fit()
+# model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
+# model.run_evaluation()
+# model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
+>>>>>>> 3c62934f01bdea73e3b3c56fd2742a847ea2c669
 
 
 

@@ -189,6 +189,7 @@ class mlp(evaluator):
             self.vectorizationType = re_vectorization_type.group(1)
             print("This utilizes the vectorization: {}".format(str(self.vectorizationType)))
 
+<<<<<<< HEAD
         # if isMajority_rule == True:
         #     predictions, test_accuracy = self.mlp_majority_rule_test(test_set_dewey=TEST_SET, MODEL=model,
         #                                                         MAX_SEQUENCE_LENGTH=self.maxSequenceLength,
@@ -203,6 +204,14 @@ class mlp(evaluator):
         test_score,self.accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
         self.predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
         gc.collect()
+=======
+
+        x_test, y_test = self.fasttextTest2mlp(TEST_SET, self.maxSequenceLength, tokenizer, labels_index,
+                                               self.vectorizationType)
+        test_score,self.accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
+        self.predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
+
+>>>>>>> 3c62934f01bdea73e3b3c56fd2742a847ea2c669
         # Writing results to txt-file.
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
         #    result_file.write('Test_accuracy:' + str(test_accuracy) + '\n\n')

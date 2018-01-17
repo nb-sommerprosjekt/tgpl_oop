@@ -1,6 +1,6 @@
 import sys
 sys.path.append('/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/nb_ml')
-from nb_ml import CNN, MLP, preprocessing, logreg
+from nb_ml import CNN, MLP, preprocessing, logreg, fast_text
 
 
 # ### Code for running CNN training and Predictio
@@ -14,15 +14,13 @@ from nb_ml import CNN, MLP, preprocessing, logreg
 
 #test.printPredictionsAndAccuracy()
 #
-## Code for running MLP training and Prediction
-model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
-print(MLP.config)
-#model.fit()
-#model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
-#model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training", False)
-#model.get_predictions(model.predictions, model.correct_deweys)
-#model.evaluate_prediction()
-#model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
+# ## Code for running MLP training and Prediction
+# model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
+# model.fit()
+# model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
+# model.get_predictions(model.predictions, model.correct_deweys)
+# model.evaluate_prediction()
+# model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
 # model.printKeyMetrics()
 
 
@@ -36,3 +34,10 @@ print(MLP.config)
 # test.printKeyMetrics()
 #test.printPredictionsAndAccuracy()
 #print(test.correct_deweys)
+
+ft_test = fast_text.fast_text("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/fasttext.yml")
+ft_test.fit()
+ft_test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
+ft_test.get_predictions(ft_test.predictions, ft_test.correct_deweys)
+ft_test.evaluate_prediction()
+ft_test.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/fasttext_logTest.txt")

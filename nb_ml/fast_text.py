@@ -6,7 +6,6 @@ import datetime
 import os
 class fast_text(evaluator):
     def __init__(self, pathToConfigFile):
-        print("Something will be written here")
         self.__config = {}
         self.load_config(pathToConfigFile)
 
@@ -36,25 +35,29 @@ class fast_text(evaluator):
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
         self.tmp_ft_file_path =self.save_path + "/tmp.txt"
-        self.tmp_ft_test_file_path =  self.save_path + "tmp_test.txt"
-
+        self.predictions = None
+        self.correct_deweys = None
     def fit(self):
         print("Henter inn tekst")
         self.trainFolder2fasttext()
         print("Starter trening")
-        self.model = fasttext.supervised(self.tmp_ft_file_path, 'model')
+        if self.wikiVec == True:
+            print("Kjører test med forhåndstrente Embeddings")
+            self.model = fasttext.supervised(input_file=self.tmp_ft_file_path, output='model', epoch=self.epochs,
+                                             lr=self.learningRate, lr_update_rate=self.lrUpdate, loss=self.lossFunction,
+                                             ws=self.wordWindow, pretrained_vectors = self.wikiPath)
+        else:
+            self.model = fasttext.supervised(input_file=self.tmp_ft_file_path, output='model', epoch=self.epochs,
+                                             lr=self.learningRate, lr_update_rate=self.lrUpdate, loss=self.lossFunction,
+                                             ws=self.wordWindow)
         os.remove(self.tmp_ft_file_path)
+
     def predict(self, pathToTestSet):
+        print("Lager prediksjoner")
         self.testFolder2Fasttext(pathToTestSet)
-        result = (self.model).test(self.tmp_ft_test_file_path)
-        os.remove(self.tmp_ft_test_file_path)
-
-        precision = result.precision
-        recall = result.recall
-        print("Accuracy: {}".format(precision))
-
-        print("Recall: {}".format(recall))
-        print("smth different")
+        predictions = (self.model).predict(texts = self.x_test , k = self.kLabels)
+        self.predictions = predictions
+        print(predictions)
 
     def trainFolder2fasttext(self):
         corpus_df = utils.get_articles_from_folder(self.trainingSetPath)
@@ -65,26 +68,27 @@ class fast_text(evaluator):
         self.x_train = corpus_df["text"].values
         self.findValidDeweysFT()
         fasttextInputFile = open(self.tmp_ft_file_path, "w")
+
         for i in range(0,len(self.y_train)):
             fasttextInputFile.write("__label__"+str(self.y_train[i])+" " + str(self.x_train[i]) + '\n')
-        fasttextInputFile.close()
+        #fasttextInputFile.close()
+
     def testFolder2Fasttext(self, pathToTestSet):
         test_corpus_df = utils.get_articles_from_folder(pathToTestSet)
         ###Filtering articles by frequency of articles per dewey
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
         self.y_test = test_corpus_df['dewey'].values
         self.x_test = test_corpus_df['text'].values
+        self.correct_deweys = self.y_test
 
-        fasttextInputFile = open(self.tmp_ft_test_file_path, "w")
-        for i in range(0,len(self.y_test)):
-            fasttextInputFile.write("__label__"+str(self.y_test[i])+" " + str(self.x_test[i]) + '\n')
-        fasttextInputFile.close()
+
+
     def findValidDeweysFT(self):
         self.validDeweys = list(set(self.y_train))
 
-if __name__ == '__main__':
-    test = fast_text("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/fasttext.yml")
-    test.fit()
-    test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
-    print(test.validDeweys)
-    #test.folder2fasttext()
+# if __name__ == '__main__':
+#     test = fast_text("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/fasttext.yml")
+#     test.fit()
+#     test.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
+#     print(test.correct_labels)
+#     #test.folder2fasttext()

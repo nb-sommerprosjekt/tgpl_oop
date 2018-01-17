@@ -14,20 +14,20 @@ from nb_ml import CNN, MLP, preprocessing, logreg, fast_text
 #test.printPredictionsAndAccuracy()
 #
 ## Code for running MLP training and Prediction
-# model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
-# model.fit()
-# model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test", False)
-# model.run_evaluation()
-# model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
+model = MLP.mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")
+model.fit()
+model.predict("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test")
+model.run_evaluation()
+model.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logTest.txt")
 
 
 
 # ### Code for running logistic regression training and prediction
-test = logreg.logReg("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/logreg.yml")
-test.fit_LogReg()
-test.predict()
-test.run_evaluation()
-test.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logResTest.txt")
+# test = logreg.logReg("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/logreg.yml")
+# test.fit_LogReg()
+# test.predict()
+# test.run_evaluation()
+# test.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logResTest.txt")
 # test.get_predictions(test.predictions, test.correct_deweys)
 # test.evaluate_prediction()
 # test.printKeyMetrics()

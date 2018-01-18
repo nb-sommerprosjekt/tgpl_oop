@@ -67,6 +67,42 @@ class logReg(evaluator):
         self.saveModel()
     def fit_w_tuning(self):
         print("Her vil det tunes")
+        self.fasttext2sklearn()
+        #tfidf = TfidfVectorizer(norm = 'l2', min_df = 2, use_idf = True, smooth_idf= False, sublinear_tf = True, ngram_range = (1,4),
+        #                        max_features = 20000)
+
+        if self.vectorizationType == "tfidf":
+            vectorizer = TfidfVectorizer()
+            print("starter transformering")
+            x_train_vectorized = vectorizer.fit_transform(self.x_train)
+        else:
+            if self.vectorizationType == "count":
+                vectorizer = CountVectorizer()
+                x_train_vectorized = vectorizer.fit_transform(self.x_train)
+        print("Transformering gjennomført")
+        test_corpus_df = utils.get_articles_from_folder(self.test_set)
+        test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
+
+        self.y_test = test_corpus_df['dewey']
+        self.x_test = test_corpus_df['text']
+        self.correct_deweys = test_corpus_df['dewey'].values
+
+        x_test_vectorized = vectorizer.transform(self.x_test)
+        self.x_test = x_test_vectorized
+        print("Starter trening")
+        optimization_params = {'C' : [1,10,100,100], 'penalty' : ['l1', 'l2'], 'class_weight' : ['None', 'balanced']
+                               ,'multi_class' : ['ovr', 'multinomial']}
+        mod = LogisticRegression()
+        grid = GridSearchCV(mod, optimization_params, cv = 10, scoring = 'accuracy')
+        best_model = grid.fit(x_train_vectorized,self.y_train)
+
+        # View best hyperparameters
+        print('Best Penalty:', best_model.best_estimator_.get_params()['penalty'])
+        print('Best C:', best_model.best_estimator_.get_params()['C'])
+        #mod.fit(x_train_vectorized, self.y_train)
+        #self.model = logMod
+        self.model = best_model
+        self.saveModel()
     def predict(self):
         self.getPredictionsAndAccuracy()
 

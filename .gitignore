@@ -17,3 +17,6 @@ new_artificial_test/*
 nb_ml/model.bin
 *.bin
 config/*
+config (copy)/
+preprocessing (copy).py
+train (copy).py

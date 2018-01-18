@@ -50,8 +50,9 @@ class evaluator():
         #print("accuracy:" +str(accuracy_score(self.correct_labels,self.first_predictions)))
         print("Number of classes: "+str(num_classes))
 
-    def resultToLog(self, filepath):
+    def resultToLog(self, filepath, modelConfigs):
         with open(filepath, 'w') as logFile:
-            logFile.write(str(self.classification_report) + '\n\n' + "Accuracy: " + str(self.accuracy))
+            logFile.write(str(self.classification_report) + '\n\n' + "Accuracy: " + str(self.accuracy)
+                          + '\n' + str(modelConfigs))
 
 

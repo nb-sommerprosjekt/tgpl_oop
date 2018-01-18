@@ -13,7 +13,7 @@ from evaluator import evaluator
 class logReg(evaluator):
 
     def __init__(self, pathToConfigFile):
-        self.config = {}
+        self.__config = {}
         self.load_config(pathToConfigFile = pathToConfigFile)
         self.x_train = []
         self.y_train = []
@@ -25,14 +25,14 @@ class logReg(evaluator):
 
     def load_config(self, pathToConfigFile):
         with open(pathToConfigFile, "r") as file:
-            self.config = yaml.load(file)
-        self.training_set = self.config["training_set"]
-        self.test_set = self.config["test_set"]
-        self.vectorizationType = self.config["vectorizationType"]
-        self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
-        self.kPreds = self.config["kPreds"]
-        self.modelsDirectory =self.config["modelsDirectory"]
-        self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
+            self.__config = yaml.load(file)
+        self.training_set = self.__config["training_set"]
+        self.test_set = self.__config["test_set"]
+        self.vectorizationType = self.__config["vectorizationType"]
+        self.minNumArticlesPerDewey = self.__config["minNumArticlesPerDewey"]
+        self.kPreds = self.__config["kPreds"]
+        self.modelsDirectory =self.__config["modelsDirectory"]
+        self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
         super(logReg, self).__init__(self.evaluatorConfigPath)
 
     def fit(self):
@@ -65,7 +65,44 @@ class logReg(evaluator):
         #self.model = logMod
         self.model = mod
         self.saveModel()
+    def fit_w_tuning(self):
+        print("Her vil det tunes")
+        self.fasttext2sklearn()
+        #tfidf = TfidfVectorizer(norm = 'l2', min_df = 2, use_idf = True, smooth_idf= False, sublinear_tf = True, ngram_range = (1,4),
+        #                        max_features = 20000)
 
+        if self.vectorizationType == "tfidf":
+            vectorizer = TfidfVectorizer()
+            print("starter transformering")
+            x_train_vectorized = vectorizer.fit_transform(self.x_train)
+        else:
+            if self.vectorizationType == "count":
+                vectorizer = CountVectorizer()
+                x_train_vectorized = vectorizer.fit_transform(self.x_train)
+        print("Transformering gjennomført")
+        test_corpus_df = utils.get_articles_from_folder(self.test_set)
+        test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
+
+        self.y_test = test_corpus_df['dewey']
+        self.x_test = test_corpus_df['text']
+        self.correct_deweys = test_corpus_df['dewey'].values
+
+        x_test_vectorized = vectorizer.transform(self.x_test)
+        self.x_test = x_test_vectorized
+        print("Starter trening")
+        optimization_params = {'C' : [1,10,100,100], 'penalty' : ['l1', 'l2'], 'class_weight' : ['None', 'balanced']
+                               ,'multi_class' : ['ovr', 'multinomial']}
+        mod = LogisticRegression()
+        grid = GridSearchCV(mod, optimization_params, cv = 10, scoring = 'accuracy')
+        best_model = grid.fit(x_train_vectorized,self.y_train)
+
+        # View best hyperparameters
+        print('Best Penalty:', best_model.best_estimator_.get_params()['penalty'])
+        print('Best C:', best_model.best_estimator_.get_params()['C'])
+        #mod.fit(x_train_vectorized, self.y_train)
+        #self.model = logMod
+        self.model = best_model
+        self.saveModel()
     def predict(self):
         self.getPredictionsAndAccuracy()
 
@@ -131,6 +168,8 @@ class logReg(evaluator):
     def run_evaluation(self):
         super(logReg, self).get_predictions(self.predictions, self.correct_deweys)
         super(logReg, self).evaluate_prediction()
+    def printResultToLog(self, filepath):
+        super(logReg,self).resultToLog(filepath ,self.__config)
 
 # if __name__ == '__main__':
 #     print("starting")

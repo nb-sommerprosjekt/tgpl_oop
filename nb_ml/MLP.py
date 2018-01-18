@@ -194,11 +194,22 @@ class mlp(evaluator):
             self.vectorizationType = re_vectorization_type.group(1)
             print("This utilizes the vectorization: {}".format(str(self.vectorizationType)))
 
-
+        # if isMajority_rule == True:
+        #     predictions, test_accuracy = self.mlp_majority_rule_test(test_set_dewey=TEST_SET, MODEL=model,
+        #                                                         MAX_SEQUENCE_LENGTH=self.maxSequenceLength,
+        #                                                         TRAIN_TOKENIZER=tokenizer,
+        #                                                         LABEL_INDEX_VECTOR=labels_index,
+        #                                                         VECTORIZATION_TYPE=self.vectorizationType,
+        #                                                         k_output_labels=k_output_labels)
+        #
+        # else:
         x_test, y_test = self.fasttextTest2mlp(TEST_SET, self.maxSequenceLength, tokenizer, labels_index,
-                                               self.vectorizationType)
+                                          self.vectorizationType)
         test_score,self.accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
+
         self.predictions = utils_nb.prediction(model, x_test, k_output_labels, labels_index)
+        gc.collect()
+
 
         # Writing results to txt-file.
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
@@ -283,6 +294,9 @@ class mlp(evaluator):
 
         return test_score, test_accuracy
 
+    #def resultToLog(self, filepath, modelConfigs)
+    def printResultToLog(self, filepath):
+        super(mlp,self).resultToLog(filepath ,self.__config)
 
 # if __name__ == '__main__':
 #     model = mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")

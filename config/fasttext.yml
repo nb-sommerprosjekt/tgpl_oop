@@ -1,7 +1,7 @@
 # python
 {
-  trainingSetPath : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training,
-  minNumArticlesPerDewey : !!python/int 60,
+  trainingSetPath : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training,
+  minNumArticlesPerDewey : !!python/int 100,
   evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml,
   epochs: !!python/int 80,
   learningRate : !!python/float 0.3,

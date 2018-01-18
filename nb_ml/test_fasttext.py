@@ -43,6 +43,7 @@ class test_fasttext:
 
 
 	def run_tests(self):
+		count=0
 		for wikiVec in self.wikiVecVector:
 			for lrUpdate in self.lrUpdateVector:
 				for lossFunction in self.lossFunctionVector:
@@ -50,15 +51,22 @@ class test_fasttext:
 						for wordWindow in self.wordWindowVector:
 							for epochs in self.epochsVector:
 								for minNumArticlesPerDewey in self.minNumArticlesPerDeweyVector:
+									tid=time.time()
+									run_length=len(self.wikiVecVector)*len(self.lrUpdateVector)*len(self.lossFunctionVector)*len(self.learningRateVector)*len(self.wordWindowVector)*len(self.epochsVector)*len(self.minNumArticlesPerDeweyVector)
+									count += 1
+									print("Gjør test nr {} av {} : ".format(count,run_length))
 									new_configFile, run_name = self.create_config_file(wikiVec, lrUpdate,
 									                                                   learningRate,lossFunction,wordWindow, epochs,
 									                                                   minNumArticlesPerDewey)
-									cnn_model = fast_text.fast_text(new_configFile)
-									cnn_model.fit()
-									cnn_model.predict(self.testSetPath)
-									cnn_model.run_evaluation()
+									fasttext_model = fast_text.fast_text(new_configFile)
+									fasttext_model.fit()
+									fasttext_model.predict(self.testSetPath)
+									fasttext_model.run_evaluation()
 									new_logPath = os.path.join(self.logFolder, run_name + ".log")
-									cnn_model.resultToLog(new_logPath)
+									fasttext_model.printResultToLog(new_logPath)
+									print("Det tok {} \n".format(time.time() - tid))
+
+		
 
 	def create_config_file(self, wikiVec, lrUpdate, learningRate, lossFunction,wordWindow,epochs, minNumArticlesPerDewey):
 		new_config = {}

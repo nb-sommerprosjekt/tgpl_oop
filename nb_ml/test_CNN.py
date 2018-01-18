@@ -35,6 +35,7 @@ class test_CNN:
 		self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
 
 	def run_tests(self):
+		count=0
 		for vocabSize in self.vocabSizeVector:
 			for maxSequenceLength in self.maxSequenceLengthVector:
 				for vectorizationType in self.vectorizationTypeVector:
@@ -43,12 +44,19 @@ class test_CNN:
 							new_configFile, run_name = self.create_config_file(vocabSize, maxSequenceLength,
 							                                                   vectorizationType, epochs,
 							                                                   minNumArticlesPerDewey)
+							tid = time.time()
+							count += 1
+							run_length = len(self.vocabSizeVector) * len(self.maxSequenceLengthVector) * len(
+								self.vectorizationTypeVector) * len(self.epochsVector) * len(
+								self.minNumArticlesPerDeweyVector)
+							print("Gjør test nr {} av {} : ".format(count, run_length))
 							cnn_model = CNN.cnn(new_configFile)
 							cnn_model.fit()
 							cnn_model.predict(self.testSetPath)
 							cnn_model.run_evaluation()
 							new_logPath = os.path.join(self.logFolder, run_name + ".log")
-							cnn_model.resultToLog(new_logPath)
+							cnn_model.printResultToLog(new_logPath)
+							print("Det tok {} \n".format(time.time() - tid))
 
 	def create_config_file(self, vocabSize, maxSequenceLength, vectorizationType, epochs, minNumArticlesPerDewey):
 		new_config = {}

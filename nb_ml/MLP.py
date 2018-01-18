@@ -287,6 +287,9 @@ class mlp(evaluator):
 
         return test_score, test_accuracy
 
+    #def resultToLog(self, filepath, modelConfigs)
+    def printResultToLog(self, filepath):
+        super(mlp,self).resultToLog(filepath ,self.__config)
 
 # if __name__ == '__main__':
 #     model = mlp("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/mlp.yml")

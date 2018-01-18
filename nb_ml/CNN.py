@@ -21,7 +21,7 @@ from evaluator import evaluator
 
 class cnn(evaluator):
     def __init__(self, pathToConfigFile):
-        self.config = {}
+        self.__config = {}
         self.load_config(pathToConfigFile)
         self.x_train = []
         self.y_train = []
@@ -34,23 +34,23 @@ class cnn(evaluator):
         super(cnn, self).__init__(self.evaluatorConfigPath)
     def load_config(self, pathToConfigFile):
         with open(pathToConfigFile,"r") as file:
-             self.config = yaml.load(file)
-        self.trainingSetPath=self.config["trainingSetPath"]
-        self.vocabSize = self.config["vocabSize"]
-        self.maxSequenceLength = self.config["maxSequenceLength"]
+             self.__config = yaml.load(file)
+        self.trainingSetPath=self.__config["trainingSetPath"]
+        self.vocabSize = self.__config["vocabSize"]
+        self.maxSequenceLength = self.__config["maxSequenceLength"]
 
-        self.batchSize = self.config["batchSize"]
-        self.vectorizationType = self.config["vectorizationType"]
-        self.epochs = self.config["epochs"]
-        self.validationSplit = self.config["validationSplit"]
-        self.folderToSaveModels = self.config["folderToSaveModels"]
+        self.batchSize = self.__config["batchSize"]
+        self.vectorizationType = self.__config["vectorizationType"]
+        self.epochs = self.__config["epochs"]
+        self.validationSplit = self.__config["validationSplit"]
+        self.folderToSaveModels = self.__config["folderToSaveModels"]
         self.modelDir = None
-        self.lossModel = self.config["lossModel"]
-        self.w2vPath = self.config["w2vPath"]
-        self.embeddingDim = self.config["embeddingDimensions"]
-        self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
-        self.kPreds = self.config["kPreds"]
-        self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
+        self.lossModel = self.__config["lossModel"]
+        self.w2vPath = self.__config["w2vPath"]
+        self.embeddingDim = self.__config["embeddingDimensions"]
+        self.minNumArticlesPerDewey = self.__config["minNumArticlesPerDewey"]
+        self.kPreds = self.__config["kPreds"]
+        self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
     def fit(self): #EPOCHS, FOLDER_TO_SAVE_MODEL, loss_model,
                   #VALIDATION_SPLIT, word2vec_file_name):
         '''Training embedded cnn model'''
@@ -264,10 +264,13 @@ class cnn(evaluator):
         super(cnn, self).get_predictions(self.predictions, self.correct_deweys)
         super(cnn, self).evaluate_prediction()
 
+    def printResultToLog(self, filepath):
+        super(cnn,self).resultToLog(filepath ,self.__config)
 
     def printPredictionsAndAccuracy(self):
         print(self.predictions)
         print(self.accuracy)
+
 #if __name__ == '__main__':
     # test = cnn("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/cnn.yml")
     # test.fit()

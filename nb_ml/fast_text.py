@@ -89,6 +89,8 @@ class fast_text(evaluator):
         super(fast_text, self).get_predictions(self.predictions, self.correct_deweys)
         super(fast_text, self).evaluate_prediction()
 
+    def printResultToLog(self, filepath):
+        super(fast_text,self).resultToLog(filepath ,self.__config)
 # if __name__ == '__main__':
 #     test = fast_text("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/fasttext.yml")
 #     test.fit()

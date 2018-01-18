@@ -13,7 +13,7 @@ from evaluator import evaluator
 class logReg(evaluator):
 
     def __init__(self, pathToConfigFile):
-        self.config = {}
+        self.__config = {}
         self.load_config(pathToConfigFile = pathToConfigFile)
         self.x_train = []
         self.y_train = []
@@ -25,17 +25,17 @@ class logReg(evaluator):
 
     def load_config(self, pathToConfigFile):
         with open(pathToConfigFile, "r") as file:
-            self.config = yaml.load(file)
-        self.training_set = self.config["training_set"]
-        self.test_set = self.config["test_set"]
-        self.vectorizationType = self.config["vectorizationType"]
-        self.minNumArticlesPerDewey = self.config["minNumArticlesPerDewey"]
-        self.kPreds = self.config["kPreds"]
-        self.modelsDirectory =self.config["modelsDirectory"]
-        self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
+            self.__config = yaml.load(file)
+        self.training_set = self.__config["training_set"]
+        self.test_set = self.__config["test_set"]
+        self.vectorizationType = self.__config["vectorizationType"]
+        self.minNumArticlesPerDewey = self.__config["minNumArticlesPerDewey"]
+        self.kPreds = self.__config["kPreds"]
+        self.modelsDirectory =self.__config["modelsDirectory"]
+        self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
         super(logReg, self).__init__(self.evaluatorConfigPath)
 
-    def fit_LogReg(self):
+    def fit(self):
         self.fasttext2sklearn()
         #tfidf = TfidfVectorizer(norm = 'l2', min_df = 2, use_idf = True, smooth_idf= False, sublinear_tf = True, ngram_range = (1,4),
         #                        max_features = 20000)
@@ -65,7 +65,8 @@ class logReg(evaluator):
         #self.model = logMod
         self.model = mod
         self.saveModel()
-
+    def fit_w_tuning(self):
+        print("Her vil det tunes")
     def predict(self):
         self.getPredictionsAndAccuracy()
 
@@ -131,6 +132,8 @@ class logReg(evaluator):
     def run_evaluation(self):
         super(logReg, self).get_predictions(self.predictions, self.correct_deweys)
         super(logReg, self).evaluate_prediction()
+    def printResultToLog(self, filepath):
+        super(logReg,self).resultToLog(filepath ,self.__config)
 
 # if __name__ == '__main__':
 #     print("starting")

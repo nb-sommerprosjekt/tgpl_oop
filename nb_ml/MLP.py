@@ -13,10 +13,12 @@ import pickle
 import re
 #import evaluator2
 from sklearn.metrics import accuracy_score
-import utils
+import utils_nb
 import yaml
 import gc
+
 from evaluator import evaluator
+
 class mlp(evaluator):
 
 
@@ -63,7 +65,9 @@ class mlp(evaluator):
         self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
     def fit(self):
         '''Training model'''
+
         start_time= time.time()
+        print(self.trainingSetPath)
         self.x_train, self.y_train, tokenizer, num_classes, labels_index = self.fasttextTrain2mlp(self.trainingSetPath, self.maxSequenceLength,
                                                                                    self.vocabSize, self.vectorizationType,
                                                                                     minNumArticlesPerDewey = self.minNumArticlesPerDewey)
@@ -89,7 +93,7 @@ class mlp(evaluator):
                   verbose=1,
                   validation_split=self.validationSplit
                   )
-        #utils.plotTrainHistory(model_history)
+        #utils_nb.plotTrainHistory(model_history)
         # Lagre modell
         model_time_stamp = '{:%Y%m%d%H%M}'.format(datetime.datetime.now())
         self.model_directory = os.path.join(self.folderToSaveModels,
@@ -103,7 +107,7 @@ class mlp(evaluator):
 
         time_elapsed = time.time() - start_time
         # Skrive nøkkelparametere til tekstfil
-        utils.log_model_stats(self.model_directory, self.trainingSetPath, self.x_train
+        utils_nb.log_model_stats(self.model_directory, self.trainingSetPath, self.x_train
                               , num_classes, self.vocabSize, self.maxSequenceLength
                               , self.epochs, time_elapsed, save_model_path,
                               self.lossModel, self.vectorizationType, self.validationSplit, word2vec=None)
@@ -120,7 +124,8 @@ class mlp(evaluator):
 
     def fasttextTrain2mlp(self, FASTTEXT_TRAIN_FILE, MAX_SEQUENCE_LENGTH, VOCAB_SIZE, VECTORIZATION_TYPE, minNumArticlesPerDewey):
         '''Converting training_set from fasttext format to MLP-format'''
-        corpus_df = utils.get_articles_from_folder(FASTTEXT_TRAIN_FILE)
+
+        corpus_df = utils_nb.get_articles_from_folder(FASTTEXT_TRAIN_FILE)
 
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
         y_train = corpus_df['dewey']
@@ -193,7 +198,7 @@ class mlp(evaluator):
         x_test, y_test = self.fasttextTest2mlp(TEST_SET, self.maxSequenceLength, tokenizer, labels_index,
                                                self.vectorizationType)
         test_score,self.accuracy = self.evaluation(model,x_test,y_test, VERBOSE = 1)
-        self.predictions = utils.prediction(model, x_test, k_output_labels, labels_index)
+        self.predictions = utils_nb.prediction(model, x_test, k_output_labels, labels_index)
 
         # Writing results to txt-file.
         #with open(os.path.join(self.model_directory, "result.txt"), 'a') as result_file:
@@ -212,11 +217,11 @@ class mlp(evaluator):
     def fasttextTest2mlp(self ,fasttext_test_file, max_sequence_length, train_tokenizer, label_index_vector,
                          vectorization_type):
         ''' Preparing test data for MLP training'''
-        test_corpus_df = utils.get_articles_from_folder(fasttext_test_file)
+        test_corpus_df = utils_nb.get_articles_from_folder(fasttext_test_file)
         self.x_test = test_corpus_df['text']
         self.y_test = test_corpus_df['dewey']
         #self.correct_deweys = test_corpus_df['dewey'].values
-        validDeweys = utils.findValidDeweysFromTrain(self.y_test, label_index_vector)
+        validDeweys = utils_nb.findValidDeweysFromTrain(self.y_test, label_index_vector)
 
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
         #print(test_corpus_df.describe())
@@ -261,7 +266,7 @@ class mlp(evaluator):
             x_test = pad_sequences(test_sequences_matrix, maxlen=MAX_SEQUENCE_LENGTH)
             y_test = to_categorical(np.asarray(y_test))
 
-            predictions = utils.prediction(MODEL, x_test, k_output_labels, LABEL_INDEX_VECTOR)
+            predictions = utils_nb.prediction(MODEL, x_test, k_output_labels, LABEL_INDEX_VECTOR)
             y_test_total.append(dewey)
             majority_rule_preds = evaluator2.majority_rule(predictions, k_output_labels)
             total_preds.append(majority_rule_preds)

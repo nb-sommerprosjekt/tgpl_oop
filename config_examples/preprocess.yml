@@ -1,0 +1,26 @@
+# python
+{
+ nameOfCorpus : !!python/str tgcForOptimization
+,sourceDataSet :  !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_tgc
+,corpusSaveDestination : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set
+,corpus_name_folder : !!python/str tgcForOptimization
+,stemming : !!python/bool False
+,sentences : !!python/bool False
+,stop_words : !!python/bool True
+,extra_functions : !!python/bool False
+,lower_case : !!python/bool True
+,test_ratio : !!python/float 0.20
+,deweyLength: !!python/int 3
+,wikipedia : !!python/bool False
+,wiki_data_set_name : !!python/str tgc_wiki
+,wiki_name_corpus: !!python/str test_mandag_cnn_wiki
+,article_length: !!python/int 500
+,artificial_folder : artificial
+
+# Data augmentation
+,da_run : !!python/bool False
+,da_splits : !!python/int 10
+,da_noise_percentage : !!python/int 20
+,da_noise_method : !!python/str noise_on_parts
+,PathToNoisePickle : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/resources/most_similar_dict.pickle
+}

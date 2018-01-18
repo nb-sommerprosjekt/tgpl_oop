@@ -12,7 +12,7 @@ import time
 import os
 import pickle
 #import evaluator2
-import utils
+import utils_nb
 import yaml
 from keras import backend as K
 K.set_image_dim_ordering('tf')
@@ -93,7 +93,7 @@ class cnn(evaluator):
                   validation_split= self.validationSplit
                    )
         # list all data in history
-        #utils.plotTrainHistory(cnn_model)
+        #utils_nb.plotTrainHistory(cnn_model)
         #print(history.history.keys())
         # summarize history for accuracy
 
@@ -118,11 +118,11 @@ class cnn(evaluator):
         #
         #
         save_model_path = self.modelDir+"/model.bin"
-        utils.log_model_stats(model_directory = self.modelDir, training_set_name = self.trainingSetPath
-                              , training_set = self.x_train, num_classes = num_classes, vocab_size = self.vocabSize,
-                              max_sequence_length= self.maxSequenceLength, epochs=self.epochs, time_elapsed = timeElapsed,
-                              path_to_model= save_model_path, loss_model =self.lossModel, vectorization_type= None,
-                              validation_split = self.validationSplit, word2vec = self.w2vPath)
+        utils_nb.log_model_stats(model_directory = self.modelDir, training_set_name = self.trainingSetPath
+                                 , training_set = self.x_train, num_classes = num_classes, vocab_size = self.vocabSize,
+                                 max_sequence_length= self.maxSequenceLength, epochs=self.epochs, time_elapsed = timeElapsed,
+                                 path_to_model= save_model_path, loss_model =self.lossModel, vectorization_type= None,
+                                 validation_split = self.validationSplit, word2vec = self.w2vPath)
 
         # #Saving model
         model.save(save_model_path)
@@ -139,7 +139,7 @@ class cnn(evaluator):
 
     def fasttextTrain2CNN(self, training_set, max_sequence_length, vocab_size, minNumArticlesPerDewey):
         '''Transforming training set from fasttext format to CNN format.'''
-        corpus_df = utils.get_articles_from_folder(training_set)
+        corpus_df = utils_nb.get_articles_from_folder(training_set)
         ###Filtering articles by frequency of articles per dewey
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
         self.y_train = corpus_df['dewey']
@@ -189,7 +189,7 @@ class cnn(evaluator):
 
     def predict(self, test_set):
         '''Test module for CNN'''
-        test_corpus_df = utils.get_articles_from_folder(test_set)
+        test_corpus_df = utils_nb.get_articles_from_folder(test_set)
         k_top_labels = self.kPreds
         #Loading model
 
@@ -233,7 +233,7 @@ class cnn(evaluator):
         self.y_test = test_corpus_df['dewey']
         self.x_test = test_corpus_df['text']
 
-        validDeweys = utils.findValidDeweysFromTrain(self.y_test, labels_index)
+        validDeweys = utils_nb.findValidDeweysFromTrain(self.y_test, labels_index)
 
         #test_corpus_df = test_corpus_df[test_corpus_df['dewey'].isin(validDeweys)]
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(validDeweys)]
@@ -253,7 +253,7 @@ class cnn(evaluator):
         self.y_test = to_categorical(test_labels)
 
         test_score, self.accuracy = model.evaluate(self.x_test, self.y_test, batch_size= self.batchSize, verbose=1)
-        self.predictions = utils.prediction(model, self.x_test, k_top_labels, labels_index)
+        self.predictions = utils_nb.prediction(model, self.x_test, k_top_labels, labels_index)
 
         #Writing results to txt-file.
         with open(self.modelDir+"/result.txt",'a') as result_file:

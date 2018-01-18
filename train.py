@@ -25,7 +25,7 @@ from nb_ml import CNN, MLP, preprocessing, logreg, fast_text
 
 # ### Code for running logistic regression training and prediction
 test = logreg.logReg("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/logreg.yml")
-test.fit_LogReg()
+test.fit()
 test.predict()
 test.run_evaluation()
 test.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logResTest.txt")

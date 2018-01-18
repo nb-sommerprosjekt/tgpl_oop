@@ -1,5 +1,5 @@
 import yaml
-import utils
+import utils_nb
 from evaluator import evaluator
 import fasttext
 import datetime
@@ -28,10 +28,10 @@ class fast_text(evaluator):
         self.wikiVec = self.__config["wikiVec"]
         self.wikiPath = self.__config["wikiPath"]
         self.wordWindow = self.__config["wordWindow"]
-        self.kLabels = self.__config["kLabels"]
-        self.modelsDirectory = self.__config["modelsDirectory"]
+        self.kPreds = self.__config["kPreds"]
+        self.modelsDir = self.__config["modelsDir"]
         timestamp = '{:%Y%m%d%H%M%S}'.format(datetime.datetime.now())
-        self.save_path = self.modelsDirectory + "/fasttext-" + timestamp
+        self.save_path = self.modelsDir + "/fasttext-" + timestamp
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
         self.tmp_ft_file_path =self.save_path + "/tmp.txt"
@@ -55,12 +55,12 @@ class fast_text(evaluator):
     def predict(self, pathToTestSet):
         print("Lager prediksjoner")
         self.testFolder2Fasttext(pathToTestSet)
-        predictions = (self.model).predict(texts = self.x_test , k = self.kLabels)
+        predictions = (self.model).predict(texts = self.x_test, k = self.kPreds)
         self.predictions = predictions
-        print(predictions)
+        #print(predictions)
 
     def trainFolder2fasttext(self):
-        corpus_df = utils.get_articles_from_folder(self.trainingSetPath)
+        corpus_df = utils_nb.get_articles_from_folder(self.trainingSetPath)
         ###Filtering articles by frequency of articles per dewey
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(
                     lambda x: len(x) >= self.minNumArticlesPerDewey)
@@ -74,7 +74,7 @@ class fast_text(evaluator):
         #fasttextInputFile.close()
 
     def testFolder2Fasttext(self, pathToTestSet):
-        test_corpus_df = utils.get_articles_from_folder(pathToTestSet)
+        test_corpus_df = utils_nb.get_articles_from_folder(pathToTestSet)
         ###Filtering articles by frequency of articles per dewey
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
         self.y_test = test_corpus_df['dewey'].values

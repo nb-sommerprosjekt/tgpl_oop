@@ -1,8 +1,6 @@
 import yaml
 import time
 import os
-import sys
-sys.path.append('/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/nb_ml')
 import MLP
 
 

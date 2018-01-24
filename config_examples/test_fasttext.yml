@@ -1,0 +1,18 @@
+# python
+{
+  trainingSetPath : /home/knutf/Dokumenter/test_fredag_mlp/test_fredag_mlp_training,
+  minNumArticlesPerDeweyVector :  [60],
+  evaluatorConfigPath : !!python/str /home/knutf/workspace/shipping_ready/tgpl_oop/config/evaluator.yml,
+  testSetPath : !!python/str  /home/knutf/Dokumenter/test_fredag_mlp/test_fredag_mlp_test,
+  configFolder : !!python/str /home/knutf/workspace/shipping_ready/tgpl_oop/config/config_fasttext_run,
+  logFolder : !!python/str /home/knutf/workspace/shipping_ready/tgpl_oop/config/config_fasttext_run/logs,
+  epochsVector: [1,2],
+  learningRateVector : [0.3],
+  lrUpdateVector :  [98],
+  lossFunctionVector :  [hs],
+  wikiVecVector :  [False],
+  wikiPath : !!python/str lol/lolz ,
+  wordWindowVector : [5],
+  kPreds : !!python/int 3,
+  modelsDir : !!python/str /home/knutf/workspace/model_folder
+}

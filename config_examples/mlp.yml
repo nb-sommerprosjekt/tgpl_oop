@@ -1,0 +1,15 @@
+# python
+{
+    trainingSetPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training,
+    vocabSize : !!python/int 20000,
+    maxSequenceLength : !!python/int 5000,
+    batchSize : !!python/int 64,
+    vectorizationType : !!python/str binary,
+    epochs : !!python/int 3 ,
+    validationSplit : !!python/float 0.2,
+    folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/mlp,
+    lossModel : !!python/str categorical_crossentropy,
+    minNumArticlesPerDewey : !!python/int 60,
+    kPreds : !!python/int 5,
+    evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml
+}

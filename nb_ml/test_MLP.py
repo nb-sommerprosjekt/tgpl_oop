@@ -1,8 +1,6 @@
 import yaml
 import time
 import os
-import sys
-sys.path.append('/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/nb_ml')
 import MLP
 
 
@@ -42,19 +40,25 @@ class test_MLP:
 
 
 	def run_tests(self):
+		count=0
 		for vocabSize in self.vocabSizeVector:
 			for maxSequenceLength in self.maxSequenceLengthVector:
 				for vectorizationType in self.vectorizationTypeVector:
 					for epochs in self.epochsVector:
 						for minNumArticlesPerDewey in self.minNumArticlesPerDeweyVector:
 							new_configFile,run_name= self.create_config_file(vocabSize,maxSequenceLength,vectorizationType,epochs,minNumArticlesPerDewey)
+							tid = time.time()
+							count += 1
+							run_length=len(self.vocabSizeVector)*len(self.maxSequenceLengthVector)*len(self.vectorizationTypeVector)*len(self.epochsVector)*len(self.minNumArticlesPerDeweyVector)
+							print("Gjør test nr {} av {} : ".format(count, run_length))
 							mlp_model = MLP.mlp(new_configFile)
 							mlp_model.fit()
 							mlp_model.predict(self.testSetPath)
 							mlp_model.get_predictions(mlp_model.predictions, mlp_model.correct_deweys)
 							mlp_model.evaluate_prediction()
 							new_logPath=os.path.join(self.logFolder,run_name+".log")
-							mlp_model.resultToLog(new_logPath)
+							mlp_model.printResultToLog(new_logPath)
+							print("Det tok {} \n".format(time.time() - tid))
 
 
 								

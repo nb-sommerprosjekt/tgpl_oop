@@ -1,5 +1,5 @@
 import yaml
-import utils
+import utils_nb
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
@@ -52,7 +52,7 @@ class logReg(evaluator):
                 vectorizer = CountVectorizer()
                 x_train_vectorized = vectorizer.fit_transform(self.x_train)
         print("Transformering gjennomført")
-        test_corpus_df = utils.get_articles_from_folder(self.test_set)
+        test_corpus_df = utils_nb.get_articles_from_folder(self.test_set)
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
 
         self.y_test = test_corpus_df['dewey']
@@ -232,7 +232,7 @@ class logReg(evaluator):
 
     def fasttext2sklearn(self):
 
-            corpus_df = utils.get_articles_from_folder(self.training_set)
+            corpus_df = utils_nb.get_articles_from_folder(self.training_set)
             ###Filtering articles by frequency of articles per dewey
             corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= self.minNumArticlesPerDewey)
             self.y_train = corpus_df['dewey']

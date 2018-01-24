@@ -1,0 +1,30 @@
+# python
+{
+    trainingSetPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training/,
+    vocabSize : !!python/int 1000,
+    maxSequenceLength : !!python/int 1000,
+    batchSize : !!python/int 64,
+    vectorizationType : !!python/str binary,
+    epochs : !!python/int 1,
+    validationSplit : !!python/float 0.2,
+    folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/cnn,
+    lossModel : !!python/str categorical_crossentropy,
+    w2vPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/w2v_tgc/full.bin,
+    embeddingDimensions : !!python/int 100,
+    minNumArticlesPerDewey: !!python/int 2,
+    kPreds : !!python/int 5,
+    evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml
+}
+
+
+
+#
+#cnn_epoch_vector:::1
+#cnn_save_model_folder:::cnn
+#cnn_batch_size:::64
+#cnn_vocab_size_vector:::1000
+#cnn_sequence_length_vector:::500
+#cnn_loss_model:::categorical_crossentropy
+#cnn_validation_split:::0.0
+#cnn_w2v:::w2v_tgc/full.bin
+#cnn_k_labels:::3

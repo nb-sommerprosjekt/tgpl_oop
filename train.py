@@ -40,6 +40,14 @@ test.printResultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/cnn_optimiz
 # test.printResultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logResAll.txt")
 
 
+
+# ### Code for running logistic regression training and prediction
+# test = logreg.logReg("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/logreg.yml")
+# test.fit()
+# test.predict()
+# test.run_evaluation()
+# test.resultToLog("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/logResTest.txt")
+
 # test.get_predictions(test.predictions, test.correct_deweys)
 # test.evaluate_prediction()
 # test.printKeyMetrics()

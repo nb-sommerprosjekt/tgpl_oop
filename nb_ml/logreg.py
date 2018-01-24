@@ -5,8 +5,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import ExtraTreesClassifier
-from sklearn.feature_selection import RFE
-from xgboost import XGBClassifier
 import numpy as np
 import datetime
 import os
@@ -83,7 +81,7 @@ class logReg(evaluator):
                 vectorizer = CountVectorizer(min_df =10)
                 x_train_vectorized = vectorizer.fit_transform(self.x_train)
         print("Transformering gjennomført")
-        test_corpus_df = utils.get_articles_from_folder(self.test_set)
+        test_corpus_df = utils_nb.get_articles_from_folder(self.test_set)
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
 
         self.y_test = test_corpus_df['dewey']
@@ -94,21 +92,9 @@ class logReg(evaluator):
         self.x_test = x_test_vectorized
         print("Starter trening")
 
-        #mod = LogisticRegression()
-        #mod.fit(x_train_vectorized, self.y_train)
-
-        #rfe = RFE(mod, 20)
-        #rfe.fit(x_train_vectorized, self.y_train)
-        #mod = ExtraTreesClassifier()
-        #mod.fit(x_train_vectorized, self.y_train)
         forest = ExtraTreesClassifier(n_estimators=250, random_state= 0, max_features=20)
         forest.fit(x_train_vectorized, self.y_train)
         print("most important features + \n")
-        # with open("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/feature_importance.txt",'w') as file:
-        #     file.write(str(rfe.support_)+'\n')
-        #     file.write(str(rfe.ranking_) + '\n')
-        # print(str(rfe.support_))
-        # print(str(rfe.ranking_))
 
         importances = forest.feature_importances_
         std = np.std([tree.feature_importances_ for tree in forest.estimators_],
@@ -155,7 +141,7 @@ class logReg(evaluator):
                 vectorizer = CountVectorizer()
                 x_train_vectorized = vectorizer.fit_transform(self.x_train)
         print("Transformering gjennomført")
-        test_corpus_df = utils.get_articles_from_folder(self.test_set)
+        test_corpus_df = utils_nb.get_articles_from_folder(self.test_set)
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
 
         self.y_test = test_corpus_df['dewey']

@@ -4,7 +4,7 @@ training_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_s
 test_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_test,
 vectorizationType: !!python/str count,
 minNumArticlesPerDewey : !!python/int 1,
-kPreds : !!python/int 5,
+kPreds : !!python/int 3,
 modelsDirectory : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/logReg,
 evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml
 }

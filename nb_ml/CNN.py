@@ -72,7 +72,7 @@ class cnn(evaluator):
         embedded_sequences = embedding_layer(sequence_input)
 
         x = Conv1D(128, 5, activation = 'relu')(embedded_sequences)
-        x = MaxPooling1D(pool_size= 5)(x)
+        x = MaxPooling1D(5, )(x)
         x = Conv1D(128, 5, activation = 'relu')(x)
         x = MaxPooling1D(5)(x)
         x = Conv1D(128,5, activation = 'relu')(x)
@@ -142,8 +142,8 @@ class cnn(evaluator):
         corpus_df = utils.get_articles_from_folder(training_set)
         ###Filtering articles by frequency of articles per dewey
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
-        self.y_train = corpus_df['dewey']
-        self.x_train = corpus_df['text']
+        self.y_train = corpus_df['dewey'].values
+        self.x_train = corpus_df['text'].values
         labels_index = {}
         labels = []
         for dewey in set(self.y_train):
@@ -152,7 +152,7 @@ class cnn(evaluator):
         for dewey in self.y_train:
             labels.append(labels_index[dewey])
 
-        num_classes = len(set(corpus_df['dewey']))
+        num_classes = len(set(corpus_df['dewey'].values))
 
         tokenizer = Tokenizer(num_words= vocab_size)
         tokenizer.fit_on_texts(self.x_train)

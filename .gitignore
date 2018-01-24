@@ -19,4 +19,5 @@ nb_ml/model.bin
 config (copy)/
 preprocessing (copy).py
 train (copy).py
-
+config/*
+*.save

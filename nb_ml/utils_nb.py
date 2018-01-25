@@ -121,6 +121,8 @@ def plotTrainHistory(model):
         plt.xlabel('epoch')
         plt.legend(['train', 'test'], loc='upper left')
         plt.show()
+
+
 def getStrictArticleSelection(corpus_dataframe, articlesPerDewey):
     size = articlesPerDewey  # sample size
     replace = False  # with replacement

@@ -40,6 +40,7 @@ class test_fasttext:
 		if not os.path.exists(self.folderToSaveModels):
 			os.makedirs(self.folderToSaveModels)
 		self.tmp_ft_file_path = self.folderToSaveModels + "/tmp.txt"
+		self.strictArticleSelection = self.config["strictArticleSelection"]
 
 
 	def run_tests(self):
@@ -86,6 +87,7 @@ class test_fasttext:
 		new_config["wikiPath"] = self.wikiPath
 		new_config["kPreds"] = self.kPreds
 		new_config["evaluatorConfigPath"] = self.evaluatorConfigPath
+		new_config["strictArticleSelection"] = self.strictArticleSelection
 
 		run_name = "fasttext-wikiVec-{}-lrUpdate-{}-learningRate-{}-lossFunction-{}-epochs-{}-time-{}".format(wikiVec,
 		                                                                                           lrUpdate,

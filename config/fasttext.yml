@@ -1,9 +1,10 @@
 # python
 {
   trainingSetPath : /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training,
-  minNumArticlesPerDewey : !!python/int ,
+  minNumArticlesPerDewey : !!python/int 50,
+  strictArticleSelection: !!python/bool True,
   evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml,
-  epochs: !!python/int 80,
+  epochs: !!python/int 20,
   learningRate : !!python/float 0.3,
   lrUpdate : !!python/int 98,
   lossFunction : !!python/str hs,

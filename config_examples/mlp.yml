@@ -10,6 +10,7 @@
     folderToSaveModels : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/mlp,
     lossModel : !!python/str categorical_crossentropy,
     minNumArticlesPerDewey : !!python/int 60,
+    strictArticleSelection : !!python/bool False,
     kPreds : !!python/int 5,
     evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml
 }

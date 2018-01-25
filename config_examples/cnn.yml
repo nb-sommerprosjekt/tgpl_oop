@@ -12,6 +12,7 @@
     w2vPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/w2v_tgc/full.bin,
     embeddingDimensions : !!python/int 100,
     minNumArticlesPerDewey: !!python/int 2,
+    strictArticleSelection : !!python/bool False,
     kPreds : !!python/int 5,
     evaluatorConfigPath : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/evaluator.yml
 }

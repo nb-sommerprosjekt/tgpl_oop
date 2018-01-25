@@ -63,6 +63,7 @@ class mlp(evaluator):
         self.minNumArticlesPerDewey = self.__config["minNumArticlesPerDewey"]
         self.kPreds = self.__config["kPreds"]
         self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
+        self.strictArticleSelection = self.__config["strictArticleSelection"]
     def fit(self):
         '''Training model'''
 
@@ -128,9 +129,15 @@ class mlp(evaluator):
         corpus_df = utils_nb.get_articles_from_folder(FASTTEXT_TRAIN_FILE)
 
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
+        if self.strictArticleSelection:
+           corpus_df = utils_nb.getStrictArticleSelection(corpus_df, self.minNumArticlesPerDewey)
+
+        print(corpus_df.describe())
+
         y_train = corpus_df['dewey']
         x_train = corpus_df['text']
-
+        print(len(y_train))
+        print(len(x_train))
         labels_index = {}
         labels = []
         for dewey in set(y_train):

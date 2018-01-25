@@ -34,6 +34,7 @@ class logReg(evaluator):
         self.kPreds = self.__config["kPreds"]
         self.modelsDirectory =self.__config["modelsDirectory"]
         self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
+        self.strictArticleSelection = self.__config["strictArticleSelection"]
         super(logReg, self).__init__(self.evaluatorConfigPath)
 
     def fit(self):
@@ -221,6 +222,8 @@ class logReg(evaluator):
             corpus_df = utils_nb.get_articles_from_folder(self.training_set)
             ###Filtering articles by frequency of articles per dewey
             corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= self.minNumArticlesPerDewey)
+            if self.strictArticleSelection:
+                corpus_df = utils_nb.getStrictArticleSelection(corpus_df, self.minNumArticlesPerDewey)
             self.y_train = corpus_df['dewey']
             self.x_train = corpus_df['text']
             self.findValidDeweysSklearn()

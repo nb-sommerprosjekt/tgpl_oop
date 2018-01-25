@@ -51,6 +51,7 @@ class cnn(evaluator):
         self.minNumArticlesPerDewey = self.__config["minNumArticlesPerDewey"]
         self.kPreds = self.__config["kPreds"]
         self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
+        self.strictArticleSelection = self.__config["strictArticleSelection"]
     def fit(self): #EPOCHS, FOLDER_TO_SAVE_MODEL, loss_model,
                   #VALIDATION_SPLIT, word2vec_file_name):
         '''Training embedded cnn model'''
@@ -142,8 +143,14 @@ class cnn(evaluator):
         corpus_df = utils_nb.get_articles_from_folder(training_set)
         ###Filtering articles by frequency of articles per dewey
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= minNumArticlesPerDewey)
+        if self.strictArticleSelection:
+           corpus_df = utils_nb.getStrictArticleSelection(corpus_df, self.minNumArticlesPerDewey)
+        print(corpus_df.describe())
+
         self.y_train = corpus_df['dewey'].values
         self.x_train = corpus_df['text'].values
+        print(len(self.y_train))
+        print(len(self.x_train))
         labels_index = {}
         labels = []
         for dewey in set(self.y_train):

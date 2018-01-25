@@ -4,6 +4,7 @@ from evaluator import evaluator
 import fasttext
 import datetime
 import os
+import numpy as np
 class fast_text(evaluator):
     def __init__(self, pathToConfigFile):
         self.__config = {}
@@ -37,6 +38,7 @@ class fast_text(evaluator):
         self.tmp_ft_file_path =self.save_path + "/tmp.txt"
         self.predictions = None
         self.correct_deweys = None
+        self.strictArticleSelection = self.__config["strictArticleSelection"]
     def fit(self):
         print("Henter inn tekst")
         self.trainFolder2fasttext()
@@ -64,8 +66,14 @@ class fast_text(evaluator):
         ###Filtering articles by frequency of articles per dewey
         corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(
                     lambda x: len(x) >= self.minNumArticlesPerDewey)
+
+        if self.strictArticleSelection:
+           corpus_df = utils_nb.getStrictArticleSelection(corpus_df, self.minNumArticlesPerDewey)
+        print(corpus_df.describe())
         self.y_train = corpus_df["dewey"].values
         self.x_train = corpus_df["text"].values
+        print(len(self.y_train))
+        print(len(self.x_train))
         self.findValidDeweysFT()
         fasttextInputFile = open(self.tmp_ft_file_path, "w")
 

@@ -9,6 +9,7 @@ import numpy as np
 import datetime
 import os
 import dill
+from sklearn import svm
 import matplotlib.pyplot as plt
 from evaluator import evaluator
 class logReg(evaluator):
@@ -23,6 +24,7 @@ class logReg(evaluator):
         self.model = None
         self.predictions = None
         self.accuracy = None
+        self.vectorizer = None
 
     def load_config(self, pathToConfigFile):
         with open(pathToConfigFile, "r") as file:
@@ -50,6 +52,7 @@ class logReg(evaluator):
             if self.vectorizationType == "count":
                 vectorizer = CountVectorizer()
                 x_train_vectorized = vectorizer.fit_transform(self.x_train)
+        self.vectorizer = vectorizer
         print("Transformering gjennomført")
         test_corpus_df = utils_nb.get_articles_from_folder(self.test_set)
         test_corpus_df = test_corpus_df.loc[test_corpus_df['dewey'].isin(self.validDeweys)]
@@ -183,10 +186,15 @@ class logReg(evaluator):
 
         if not os.path.exists(save_path):
             os.makedirs(save_path)
-
+        ## saving model
         model_save_file = open(save_path + "/" + model_name, 'wb')
         dill.dump(self.model, model_save_file, -1)
         print("modell_lagret")
+
+        #Saving vectorizer
+        vectorizer_save_file = open(save_path+"/" + "vectorizer", "wb")
+        dill.dump(self.vectorizer,vectorizer_save_file, -1)
+
         model_path = save_path + "/model.pickle"
         print("Modellen er lagret i :"+ model_path)
     def getPredictionsAndAccuracy(self):
@@ -224,6 +232,7 @@ class logReg(evaluator):
             corpus_df = corpus_df.groupby('dewey')['text', 'file_name', 'dewey'].filter(lambda x: len(x) >= self.minNumArticlesPerDewey)
             if self.strictArticleSelection:
                 corpus_df = utils_nb.getStrictArticleSelection(corpus_df, self.minNumArticlesPerDewey)
+            print(corpus_df.describe())
             self.y_train = corpus_df['dewey']
             self.x_train = corpus_df['text']
             self.findValidDeweysSklearn()
@@ -246,5 +255,6 @@ class logReg(evaluator):
     #self.predictions = []
     #self.accuracy = None
     #self.topNpredictions = []
+
 
 

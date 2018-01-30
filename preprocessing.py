@@ -23,24 +23,24 @@ from nb_ml import preprocessing
 
 ## Create fake articles
 test = preprocessing.dataAugmention()
-test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess5.yml",
-               "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test5")
+test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess20.yml",
+               "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test20")
 test.get_articles()
 test.create_fake_corpus()
 test.copyArtificialFolderIntoCorpus()
-
-## Create fake articles
-test = preprocessing.dataAugmention()
-test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess15.yml",
-               "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test15")
-test.get_articles()
-test.create_fake_corpus()
-test.copyArtificialFolderIntoCorpus()
-
-## Create fake articles
-test = preprocessing.dataAugmention()
-test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess30.yml",
-               "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test30")
-test.get_articles()
-test.create_fake_corpus()
-test.copyArtificialFolderIntoCorpus()
+#
+# ## Create fake articles
+# test = preprocessing.dataAugmention()
+# test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess15.yml",
+#                "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test15")
+# test.get_articles()
+# test.create_fake_corpus()
+# test.copyArtificialFolderIntoCorpus()
+#
+# ## Create fake articles
+# test = preprocessing.dataAugmention()
+# test.getConfig("/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/config/preprocess30.yml",
+#                "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/tgcForOptimization/tgcForOptimization_training", "/home/ubuntu/PycharmProjects_saved/tgpl_w_oop/new_artificial_test30")
+# test.get_articles()
+# test.create_fake_corpus()
+# test.copyArtificialFolderIntoCorpus()

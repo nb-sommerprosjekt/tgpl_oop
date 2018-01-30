@@ -22,3 +22,7 @@ preprocessing (copy).py
 train (copy).py
 config/*
 *.save
+klassebetegnelser_dict2209_alldigits.pckl
+logReg-count20180130100948/
+logreg_test.py
+

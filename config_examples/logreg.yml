@@ -3,7 +3,7 @@
 training_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_training,
 test_set : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/data_set/test_fredag_mlp/test_fredag_mlp_test,
 vectorizationType: !!python/str count,
-minNumArticlesPerDewey : !!python/int 50,
+minNumArticlesPerDewey : !!python/int 300,
 strictArticleSelection : !!python/bool True,
 kPreds : !!python/int 5,
 modelsDirectory : !!python/str /home/ubuntu/PycharmProjects_saved/tgpl_w_oop/testing/logReg,

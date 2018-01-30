@@ -14,5 +14,6 @@
     lossModel : !!python/str categorical_crossentropy,
     minNumArticlesPerDeweyVector : [50],
     kPreds : !!python/int 5,
-    evaluatorConfigPath : !!python/str /home/knutf/workspace/shipping_ready/tgpl_oop/config/evaluator.yml
+    evaluatorConfigPath : !!python/str /home/knutf/workspace/shipping_ready/tgpl_oop/config/evaluator.yml,
+    strictArticleSelection : None
 }

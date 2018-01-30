@@ -37,6 +37,7 @@ class test_MLP:
 		self.minNumArticlesPerDeweyVector = self.__config["minNumArticlesPerDeweyVector"]
 		self.kPreds = self.__config["kPreds"]
 		self.evaluatorConfigPath = self.__config["evaluatorConfigPath"]
+		self.strictArticleSelection = self.config["strictArticleSelection"]
 
 
 	def run_tests(self):
@@ -82,6 +83,7 @@ class test_MLP:
 		new_config["lossModel"]=self.lossModel
 		new_config["kPreds"]=self.kPreds
 		new_config["evaluatorConfigPath"]=self.evaluatorConfigPath
+		new_config["strictArticleSelection"] = self.strictArticleSelection
 
 		run_name="MLP-vocab-{}-maxSequenceLength-{}-vectorizationType-{}-epochs-{}-time-{}".format(vocabSize,maxSequenceLength,vectorizationType,epochs,time.time())
 		new_configPath=os.path.join(self.configFolder,run_name+".yml")

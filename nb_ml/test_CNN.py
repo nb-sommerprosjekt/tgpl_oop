@@ -33,6 +33,7 @@ class test_CNN:
 		self.minNumArticlesPerDeweyVector = self.config["minNumArticlesPerDeweyVector"]
 		self.kPreds = self.config["kPreds"]
 		self.evaluatorConfigPath = self.config["evaluatorConfigPath"]
+		self.strictArticleSelection = self.config["strictArticleSelection"]
 
 	def run_tests(self):
 		count=0
@@ -79,6 +80,7 @@ class test_CNN:
 		new_config["evaluatorConfigPath"] = self.evaluatorConfigPath
 		new_config["w2vPath"] = self.w2vPath
 		new_config["embeddingDimensions"] = self.embeddingDimensions
+		new_config["strictArticleSelection"]=self.strictArticleSelection
 
 		run_name = "CNN-vocab-{}-maxSequenceLength-{}-vectorizationType-{}-epochs-{}-time-{}".format(vocabSize,
 		                                                                                             maxSequenceLength,

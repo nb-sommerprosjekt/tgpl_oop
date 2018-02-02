@@ -47,6 +47,35 @@ def get_articles_from_folder(folder):
 
     return corpus_df
 
+def get_articles_from_folder_several_deweys(folder):
+    ''' Tar inn en textfil som er labelet på fasttext-format. Gir ut 3 arrays. Et med navn på tekstfilene,
+    et med deweys og et med tekstene. [tekst_navn][deweys],[texts]'''
+    arr = os.listdir(folder)
+    arr_txt = [path for path in os.listdir(folder) if path.endswith(".txt")]
+
+
+    dewey_array = []
+    docs = []
+    for article_path in arr_txt:
+            article = open(os.path.join(folder,article_path), "r")
+            article = article.readlines()
+            for article_content in article:
+                dewey=article_content.partition(' ')[0].replace("__label__","")
+                text  = article_content.replace("__label__"+dewey,"")
+                docs.append(text)
+                dewey_array.append(dewey.replace(".",""))
+    text_names = [path.replace('.txt','') for path in arr_txt ]
+    #print(len(dewey_array))
+    #print(text_names)
+
+    corpus_df= pd.DataFrame(
+        {'file_name': text_names,
+         'text': docs,
+         'dewey': dewey_array
+         })
+
+    return corpus_df
+
 def log_model_stats(model_directory, training_set_name, training_set,
                  num_classes,vocab_size, max_sequence_length,
                 epochs, time_elapsed,
